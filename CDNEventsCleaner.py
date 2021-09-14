@@ -1,5 +1,5 @@
 # first get all lines from file
-with open('CDNEvents.txt', 'r') as f:
+with open('/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt', 'r') as f:
     lines = f.readlines()
 
 # remove spaces
@@ -8,5 +8,5 @@ lines = [line.replace(',,,,,,\n', '') for line in lines]
 lines=[line.replace(',', '	') for line in lines]
 
 # finally, write lines in the file
-with open('CDNEvents.txt', 'w') as f:
+with open('/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt', 'w') as f:
     f.writelines(lines)
