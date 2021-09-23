@@ -36,8 +36,8 @@ async def on_ready():
     print(f'We have logged in as {client.user}')
     channel=client.get_channel(881386384202530837)
     bot=client.get_user(881243826767945738)
-    members = '\n - '.join([member.name for member in guild.members])
-    print(f'Guild Members:\n - {members}')
+#    members = '\n - '.join([member.name for member in guild.members])
+#    print(f'Guild Members:\n - {members}')
     await channel.send(f'{bot.mention} is online')
 
 @client.event
@@ -47,7 +47,7 @@ async def on_member_join(member):
     embed=discord.Embed(title=f"Welcome {member}", description=f"Thanks for joining {member.guild.name}! \n Please go to {channell.mention} to tell us your name and what your role is in CDN (There can be multiple roles)", color=discord.Color.green()) # F-Strings!
     embed.set_thumbnail(url=member.avatar_url) # Set the embed's thumbnail to the member's avatar image!
     await channel.send(embed=embed)
-    print(member, "just joined")
+#    print(member, "just joined")
     await member.create_dm()
     await member.dm_channel.send(f'Hi {member.name}, welcome to the CDN Discord server! Please go to the channel in the CDN Discord Server that is called /#roles-name-change-requests and tell us what you do for CDN and what your name is')
 
@@ -96,11 +96,11 @@ async def on_message(message):
         await message.channel.send(f'Welcome to CDN\'s Discord Server. Please go to {channell.mention} to tell us your name and what your role is in CDN (There can be multiple roles)')
     elif message.content.startswith('$showevents'):
         exec(open(path0).read())
-        print("getting google sheet")
+#        print("getting google sheet")
         exec(open(path1).read())
-        print("cleaning google sheet")
+#        print("cleaning google sheet")
         CDNEvents=open(path2, 'r')
-        print("reading google sheet")
+#        print("reading google sheet")
         await message.channel.send(CDNEvents.read())
         await message.delete()
     elif message.content.startswith('$help'):
@@ -159,8 +159,8 @@ async def on_reaction_add(reaction, user):
             return None
         if str(reaction.emoji) == "⬆️":
 #        entry.append(user.mention+" Responded with yes")
-            print(user.nick)
-            print(reaction.message.content)
+#            print(user.nick)
+#            print(reaction.message.content)
             await event_response.send(f"{user.nick} can come to {reaction.message.content}")
         if str(reaction.emoji) == "⬇️":
             await event_response.send(f"{user.nick} cannot come to {reaction.message.content}")
