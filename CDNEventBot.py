@@ -53,8 +53,15 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-    embed=discord.Embed(title=f"{message.author} deleted a message", description="", color=discord.Colour.red())
-    embed.add_field(name=message.content, value="Deleted Message", inline=True)
+    author=message.author
+#    print(author)
+    content=message.content
+#    print(content)
+    async for message in message.guild.audit_logs(action=discord.AuditLogAction.message_delete, limit=1):
+        deleter=message.user
+    print(deleter)
+    embed=discord.Embed(title=f"{deleter} deleted a message from {author}", description="", color=discord.Colour.red())
+    embed.add_field(name=content, value="Deleted Message", inline=True)
     channel=client.get_channel(881026004154482709)
     await channel.send(embed=embed)
 
@@ -65,26 +72,6 @@ async def on_message_edit(message_before, message_after):
     embed.add_field(name=message_after.content, value="After edit", inline=True)
     channel=client.get_channel(881026004154482709)
     await channel.send(embed=embed)
-
-@client.event
-async def on_member_update(before, after):
-    log_channel=client.get_channel(881026004154482709)
-    if before.user == client.user:
-        return
-    print(before.status)
-    print(before)
-    print("status changed")
-    if str(before.status) == "online":
-        if str(after.status) == "offline":
-            timestr = time.strftime("%Y%m%d-%H%M%S")
-            print(f"{after.name} has gone {after.status} at {timestr}.")
-            embed=discord.Embed(title=f"{after.name} went offline at {timestr}", description="", color=discord.Color.orange())
-            await log_channel.send(embed=embed)
-    else:
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        print(f"{after.name} joined at {after.status} at {timestr}.")
-        embed=discord.Embed(title=f"{after.name} came online at {timestr}", description="", color=discord.Color.teal())
-        await log_channel.send(embed=embed)
 
 @client.event
 async def on_message(message):
@@ -115,12 +102,14 @@ async def on_message(message):
         CDNEvents=open(path2, 'r')
         print("reading google sheet")
         await message.channel.send(CDNEvents.read())
+        await message.delete()
     elif message.content.startswith('$help'):
         help_string=f"""Your possible commands are:
         $hello: I say hello to you
         $welcome: I tell you what to do if you recently joined and don\'t know what to do
         $showevents: I tell you what the next events are that CDN has been invited to
-        $showme: Shows your name and profile picture \n $help: View this message again
+        $showme: Shows your name and profile picture
+        $help: View this message again
         $givemerole followed by one of the following roles, case-sensitive: Afterhours, Swear-A-Lot, Mass, Senior
         $ and any characters: I will respond with Invalid Command
         Any words that don\'t include $: I will ignore your text
@@ -132,19 +121,25 @@ async def on_message(message):
         embed.add_field(name='help page', value=help_string, inline=True)
         channel=message.channel
         await channel.send(embed=embed)
+        await message.delete()
     elif message.content.startswith('$showme'):
         embed=discord.Embed(title=f"{message.author}", description="", color=discord.Color.green()) # F-Strings!
         embed.set_thumbnail(url=message.author.avatar_url)
         await message.channel.send(embed=embed)
+        await message.delete()
     elif 'happy birthday' in message.content.lower():
         await message.channel.send('Happy Birthday! 🎈🎉')
     elif message.content.startswith("$givemerole"):
         role_name=message.content
-        print(role_name)
+#        print(role_name)
         role_name=role_name[12:]
-        print(role_name)
+#        print(role_name)
         role = discord.utils.get(id.roles, name=role_name)
         await message.author.add_roles(role)
+        embed=discord.Embed(title=f"{message.author} requested {role_name}", description="", color=discord.Colour.blue())
+        embed.add_field(name=message.content, value="Role request", inline=True)
+        logChan=client.get_channel(881026004154482709)
+        await logChan.send(embed=embed)
     elif (message.channel==event_channel):
         yes="⬆️"
         no="⬇️"
@@ -154,7 +149,7 @@ async def on_message(message):
         await message.add_reaction(maybe)
     elif message.content.startswith("$"):
         await message.channel.send('Invalid Command')
-
+        await message.delete()
 @client.event
 async def on_reaction_add(reaction, user):
     event_channel=client.get_channel(881550954527326228)
