@@ -53,13 +53,13 @@ async def on_member_join(member):
 
 @client.event
 async def on_message_delete(message):
-    author=message.author
+    author=message.author.nick
 #    print(author)
     content=message.content
 #    print(content)
     async for message in message.guild.audit_logs(action=discord.AuditLogAction.message_delete, limit=1):
-        deleter=message.user
-    print(deleter)
+        deleter=message.user.nick
+#    print(deleter)
     embed=discord.Embed(title=f"{deleter} deleted a message from {author}", description="", color=discord.Colour.red())
     embed.add_field(name=content, value="Deleted Message", inline=True)
     channel=client.get_channel(881026004154482709)
