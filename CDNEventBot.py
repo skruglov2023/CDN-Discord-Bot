@@ -33,7 +33,7 @@ async def on_ready():
             break
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Server commands"))
 #    print(f'{client.user} is connected to the following guild:\n {guild.name}(id: {guild.id})')
-    print(f'We have logged in as {client.user}')
+    print(f'Logged in as {client.user}')
     channel=client.get_channel(881386384202530837)
     bot=client.get_user(881243826767945738)
 #    members = '\n - '.join([member.name for member in guild.members])
@@ -49,29 +49,38 @@ async def on_member_join(member):
     await channel.send(embed=embed)
 #    print(member, "just joined")
     await member.create_dm()
-    await member.dm_channel.send(f'Hi {member.name}, welcome to the CDN Discord server! Please go to the channel in the CDN Discord Server that is called /#roles-name-change-requests and tell us what you do for CDN and what your name is')
+    await member.dm_channel.send(f"""Hi {member.name}, welcome to the CDN Discord server! Please go to the channel in the CDN Discord Server that is called /#roles-name-change-requests and tell us what you do for CDN and what your name is""")
 
 @client.event
 async def on_message_delete(message):
     author=message.author.nick
+    this_channel=message.channel
 #    print(author)
     content=message.content
 #    print(content)
     async for message in message.guild.audit_logs(action=discord.AuditLogAction.message_delete, limit=1):
         deleter=message.user.nick
 #    print(deleter)
-    embed=discord.Embed(title=f"{deleter} deleted a message from {author}", description="", color=discord.Colour.red())
+    embed=discord.Embed(title=f"{author}'s message in {this_channel} was deleted by {deleter}", description="", color=discord.Colour.red())
     embed.add_field(name=content, value="Deleted Message", inline=True)
     channel=client.get_channel(881026004154482709)
     await channel.send(embed=embed)
 
 @client.event
 async def on_message_edit(message_before, message_after):
-    embed=discord.Embed(title=f"{message_before.author} edited a message", description="", color=discord.Color.gold())
+    embed=discord.Embed(title=f"{message_before.author.display_name} edited a message in {message_before.channel}", description="", color=discord.Color.gold())
     embed.add_field(name= message_before.content ,value="Before Edit", inline=True)
     embed.add_field(name=message_after.content, value="After edit", inline=True)
     channel=client.get_channel(881026004154482709)
     await channel.send(embed=embed)
+
+@client.event
+async def on_voice_state_update(member, before, after):
+    role = discord.utils.get(member.guild.roles, name="Voice")
+    if not before.channel and after.channel:
+        await member.add_roles(role)
+    elif before.channel and not after.channel:
+        await member.remove_roles(role)
 
 @client.event
 async def on_message(message):
@@ -91,7 +100,7 @@ async def on_message(message):
     for word in badwords:
         if word in msg:
             await message.delete()
-            await message.channel.send(f'{message.author.mention} That word is not allowed')
+            await message.channel.send(f'{message.author.mention} That word is not allowed', delete_after=15)
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
     elif '$welcome' in message.content.lower():
@@ -112,7 +121,7 @@ async def on_message(message):
 #            print(f'Roles:\n - {roles}')
             help_string=roles
             embed=discord.Embed(title="Available CDN Discord Roles", description="", color=discord.Colour.from_rgb(234, 170, 0))
-            embed.add_field(name='Use $givemerole with any role above the CDN Events role \nKeep in mind that none of these roles give you anything special \n', value=help_string, inline=True)
+            embed.add_field(name='Use $giveme with any role above the CDN Events role \nKeep in mind that none of these roles give you anything special \n', value=help_string, inline=True)
             channel=message.channel
             await channel.send(embed=embed)
         else:
@@ -123,7 +132,7 @@ async def on_message(message):
 		$showevents: I tell you what the next events are that CDN has been invited to
 		$showme: Shows your name and profile picture
 		$help: See this message again
-		$givemerole followed by a role that you want or need: You can\'t get mod, so don't bother trying to. If I can't give you a role, an admin will give it to you if necessary
+		$giveme followed by a role that you want or need: You can\'t get mod, so don't bother trying to. If I can't give you a role, an admin will give it to you if necessary
 		$showthem and user_id: Don't know why you need that, but it gives you the person's username and profile picture. You need developer mode enabled to get user_id
 		$ with a non-command: I will respond with Invalid Command
 		Autonomous program: When you post something in {event_channel.mention}, I will add 3 reactions, and will list the names of respondents in {event_response_channel.mention}
@@ -135,38 +144,71 @@ async def on_message(message):
             await channel.send(embed=embed)
         await message.delete()
     elif message.content.startswith('$showme'):
-        embed=discord.Embed(title=f"{message.author}", description="", color=discord.Color.green()) # F-Strings!
+        embed=discord.Embed(title=f"{message.author}", description="", color=discord.Color.green())
         embed.set_thumbnail(url=message.author.avatar_url)
         await message.channel.send(embed=embed)
         await message.delete()
     elif message.content.startswith('$showthem'):
         show=message.content
-        print(show)
+#        print(show)
         show=show[10:]
-        print(show)
+#        print(show)
         show_user= await client.fetch_user(show)
-        print(show_user)
+#        print(show_user)
         embed=discord.Embed(title=f"{show_user}", description="", color=discord.Color.blue())
         embed.set_thumbnail(url=show_user.avatar_url)
         await message.channel.send(embed=embed)
         await message.delete()
     elif 'happy birthday' in message.content.lower():
         await message.channel.send('Happy Birthday! 🎈🎉')
-    elif message.content.startswith("$givemerole"):
+    elif message.content.startswith("$giveme"):
         role_name=message.content
 #        print(role_name)
-        role_name=role_name[12:]
+        role_name=role_name[8:]
+        if role_name=="Voice":
+            await message.channel.send("You can't have this role", delete_after=10)
+            await message.delete()
 #        print(role_name)
-        if message.channel==role_change:
+        elif message.channel==role_change:
             role = discord.utils.get(id.roles, name=role_name)
+#            print(role)
+#            print(message.author)
             await message.author.add_roles(role)
-            embed=discord.Embed(title=f"{message.author} requested {role_name}", description="", color=discord.Colour.blue())
+            embed=discord.Embed(title=f"{message.author.display_name} requested {role_name}", description="", color=discord.Colour.blue())
             embed.add_field(name=message.content, value="Role request", inline=True)
             logChan=client.get_channel(881026004154482709)
             await logChan.send(embed=embed)
+            if role in message.author.roles:
+                await message.channel.send(f"{role_name} given to {message.author.display_name}", delete_after=60)
         else:
-            await message.channel.send(f"Roles can't be requested here. Please use {role_change.mention}", delete_after=5)
+            await message.channel.send(f"Roles can't be requested here. Please use {role_change.mention}", delete_after=10)
             await message.delete()
+    elif message.content.startswith("$give"):
+        #print(message.content)
+        if producers in message.author.roles:
+            give_to=message.content
+            #print(give_to)
+            give_to=give_to.replace('!', '')
+            #print(give_to)
+            role_name=give_to[28:]
+#            print(role_name)
+            give_to=give_to[8:26]
+#        print(f"Only the uid {give_to}")
+#        print(message.author)
+            giving=id.get_member(int(give_to))
+#        print(stephan)
+#            print(f"User's name {giving}")
+            rolee = discord.utils.get(id.roles, name=role_name)
+            await giving.add_roles(rolee)
+            embed=discord.Embed(title=f"{message.author.display_name} requested {role_name} for {giving.display_name}", description="", color=discord.Colour.dark_blue())
+            embed.add_field(name=message.content, value="Role requested", inline=True)
+            logChan=client.get_channel(881026004154482709)
+            await logChan.send(embed=embed)
+            if rolee in giving.roles:
+                await message.channel.send(f"{role_name} given to {giving.display_name}", delete_after=60)
+        else:
+            await message.channel.send("You don't have the Producers role, so I can\'t give them this role", delete_after=30)
+
     elif message.content.startswith("$clear"):
         if producers in message.author.roles:
            # print("can delete")
@@ -186,7 +228,7 @@ async def on_message(message):
         await message.add_reaction(no)
         await message.add_reaction(maybe)
     elif message.content.startswith("$"):
-        await message.channel.send('Invalid Command')
+        await message.channel.send('Invalid Command: Try Again', delete_after=15)
         await message.delete()
 
 @client.event
