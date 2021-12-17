@@ -42,11 +42,11 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-    channel = client.get_channel(875158282422067234)
+    #channel = client.get_channel(875158282422067234)
     channell=client.get_channel(881007767018700860)
     embed=discord.Embed(title=f"Welcome {member}", description=f"Thanks for joining {member.guild.name}! \n Please go to {channell.mention} to tell us your name and what your role is in CDN (There can be multiple roles)", color=discord.Color.green()) # F-Strings!
     embed.set_thumbnail(url=member.avatar_url) # Set the embed's thumbnail to the member's avatar image!
-    await channel.send(embed=embed)
+    await channell.send(embed=embed)
 #    print(member, "just joined")
     await member.create_dm()
     await member.dm_channel.send(f"""Hi {member.name}, welcome to the CDN Discord server! Please go to the channel in the CDN Discord Server that is called /#roles-name-change-requests and tell us what you do for CDN and what your name is""")
@@ -91,6 +91,7 @@ async def on_message(message):
     stephan=client.get_user(675726066018680861)
     role_change=client.get_channel(881007767018700860)
     producers=discord.utils.get(id.roles, id=880274405836599356)
+    newbies=discord.utils.get(id.roles, id=917447097849118760)
 #    print(producers)
     if message.author == client.user:
         return
@@ -166,9 +167,12 @@ async def on_message(message):
 #        print(role_name)
         role_name=role_name[8:]
         if role_name=="Voice":
-            await message.channel.send("You can't have this role", delete_after=10)
+            await message.channel.send("You can't have this role", delete_after=15)
             await message.delete()
 #        print(role_name)
+        elif newbies in message.author.roles:
+            await message.channel.send(f"If you need a role, please ask {stephan.name} or another {producers.name}", delete_after=30)
+            await message.delete()
         elif message.channel==role_change:
             role = discord.utils.get(id.roles, name=role_name)
 #            print(role)
@@ -184,19 +188,19 @@ async def on_message(message):
             await message.channel.send(f"Roles can't be requested here. Please use {role_change.mention}", delete_after=10)
             await message.delete()
     elif message.content.startswith("$give"):
+        give_to=message.content
+        #print(give_to)
+        give_to=give_to.replace('!', '')
+        #print(give_to)
+        role_name=give_to[28:]
+#       print(role_name)
+        give_to=give_to[8:26]
+        if role_name=="Voice":
+            await message.channel.send("You can't give this role", delete_after=10)
+            await message.delete()
         #print(message.content)
-        if producers in message.author.roles:
-            give_to=message.content
-            #print(give_to)
-            give_to=give_to.replace('!', '')
-            #print(give_to)
-            role_name=give_to[28:]
-#            print(role_name)
-            give_to=give_to[8:26]
-#        print(f"Only the uid {give_to}")
-#        print(message.author)
+        elif producers in message.author.roles:
             giving=id.get_member(int(give_to))
-#        print(stephan)
 #            print(f"User's name {giving}")
             rolee = discord.utils.get(id.roles, name=role_name)
             await giving.add_roles(rolee)
@@ -208,6 +212,32 @@ async def on_message(message):
                 await message.channel.send(f"{role_name} given to {giving.display_name}", delete_after=60)
         else:
             await message.channel.send("You don't have the Producers role, so I can\'t give them this role", delete_after=30)
+            await message.channel.send(f"Hey guys, {message.author.display_name} wanted to give someone a role!", tts=True, delete_after=60)
+#new text here
+    elif message.content.startswith("$newrole"):
+        role_name=message.content
+        give_to=role_name.replace('!', '')
+        role_name=give_to[35:]
+#        print(role_name)
+        give_to=give_to[15:33]
+#        print(give_to)
+        if producers in message.author.roles:
+            await id.create_role(name=role_name)
+            giving=id.get_member(int(give_to))
+#            print(f"User's name {giving}")
+            rolee = discord.utils.get(id.roles, name=role_name)
+            await giving.add_roles(rolee)
+            embed=discord.Embed(title=f"{message.author.display_name} created {role_name} for {giving.display_name}", description="", color=discord.Colour.orange())
+            embed.add_field(name=message.content, value="Role Created", inline=True)
+            logChan=client.get_channel(881026004154482709)
+            await logChan.send(embed=embed)
+#            if role_name in giving.roles:
+            await message.channel.send(f"{role_name} was successfully created by {message.author.display_name} and given to {giving.display_name}", delete_after=600)
+            await stephan.create_dm()
+            await stephan.dm_channel.send(f"{role_name} was created by {message.author.display_name} for {giving.display_name}")
+        else:
+            await message.channel.send("You don't have the Producers role, so you can't be creating roles", delete_after=30)
+            await message.channel.send(f"Hey guys, {message.author.display_name} wanted to create and give someone a role!", tts=True, delete_after=60)
 
     elif message.content.startswith("$clear"):
         if producers in message.author.roles:
@@ -220,6 +250,8 @@ async def on_message(message):
             await message.channel.purge(limit=num_clear)
             #print("deleting messages")
             await message.channel.send(f"{message.author.nick} deleted the last {num_clear} messages", delete_after=30)
+        else:
+            await message.channel.send("You don't have permission to bulk delete messages", delete_after=15)
     elif (message.channel==event_channel):
         yes="⬆️"
         no="⬇️"
@@ -228,7 +260,7 @@ async def on_message(message):
         await message.add_reaction(no)
         await message.add_reaction(maybe)
     elif message.content.startswith("$"):
-        await message.channel.send('Invalid Command: Try Again', delete_after=15)
+        await message.channel.send('Invalid Command: Try Again', delete_after=10)
         await message.delete()
 
 @client.event
