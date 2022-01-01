@@ -107,14 +107,14 @@ async def on_voice_state_update(member, before, after):
 
 @client.event
 async def on_message(message):
-    id = client.get_guild(875158282422067230)
+    gid = client.get_guild(875158282422067230)
     event_channel = client.get_channel(881550954527326228)
     event_response_channel = client.get_channel(882667880028708874)
     channell = client.get_channel(881007767018700860)
     stephan = client.get_user(675726066018680861)
     role_change = client.get_channel(881007767018700860)
-    producers = discord.utils.get(id.roles, id=880274405836599356)
-    newbies = discord.utils.get(id.roles, id=917447097849118760)
+    producers = discord.utils.get(gid.roles, id=880274405836599356)
+    newbies = discord.utils.get(gid.roles, id=917447097849118760)
     #    print(producers)
     if message.author == client.user:
         return
@@ -143,7 +143,7 @@ async def on_message(message):
         await message.delete()
     elif message.content.startswith('$help'):
         if "roles" in message.content.lower():
-            roles = '\n - '.join([role.name for role in id.roles])
+            roles = '\n - '.join([role.name for role in gid.roles])
             #            print(f'Roles:\n - {roles}')
             help_string = roles
             embed = discord.Embed(title="Available CDN Discord Roles", description="",
@@ -164,8 +164,7 @@ async def on_message(message):
 		$giveme followed by a role that you want or need: You can\'t get mod, so don't bother trying to. If I can't give you a role, an admin will give it to you if necessary
 		$showthem and user_id: Don't know why you need that, but it gives you the person's username and profile picture. You need developer mode enabled to get user_id
 		$ with a non-command: I will respond with Invalid Command
-		Autonomous program: When you post something in {event_channel.mention}, I will add 3 reactions, and will list the names of respondents in {event_response_channel.mention}
-		All messages, when deleted or edited, will be recorded
+		Autonomous program: When you post something in {event_channel.mention}, I will add 3 reactions that you can respond to.
 	    Message {stephan.mention} with any questions"""
             embed = discord.Embed(title="CDN Bot Support", description="", color=discord.Colour.from_rgb(234, 170, 0))
             embed.add_field(name='Possible commands include:', value=help_string, inline=True)
@@ -203,7 +202,7 @@ async def on_message(message):
                                        delete_after=30)
             await message.delete()
         elif message.channel == role_change:
-            role = discord.utils.get(id.roles, name=role_name)
+            role = discord.utils.get(gid.roles, name=role_name)
             #            print(role)
             #            print(message.author)
             await message.author.add_roles(role)
@@ -231,9 +230,9 @@ async def on_message(message):
             await message.delete()
         # print(message.content)
         elif producers in message.author.roles:
-            giving = id.get_member(int(give_to))
+            giving = gid.get_member(int(give_to))
             #            print(f"User's name {giving}")
-            rolee = discord.utils.get(id.roles, name=role_name)
+            rolee = discord.utils.get(gid.roles, name=role_name)
             await giving.add_roles(rolee)
             embed = discord.Embed(
                 title=f"{message.author.display_name} requested {role_name} for {giving.display_name}", description="",
@@ -257,10 +256,10 @@ async def on_message(message):
         give_to = give_to[15:33]
         #        print(give_to)
         if producers in message.author.roles:
-            await id.create_role(name=role_name)
-            giving = id.get_member(int(give_to))
+            await gid.create_role(name=role_name)
+            giving = gid.get_member(int(give_to))
             #            print(f"User's name {giving}")
-            rolee = discord.utils.get(id.roles, name=role_name)
+            rolee = discord.utils.get(gid.roles, name=role_name)
             await giving.add_roles(rolee)
             embed = discord.Embed(title=f"{message.author.display_name} created {role_name} for {giving.display_name}",
                                   description="", color=discord.Colour.orange())
