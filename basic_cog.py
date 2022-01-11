@@ -16,7 +16,7 @@ class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="ping")
+    @commands.command(name="ping", hidden=True)
     async def ping(self, ctx: commands.Context):
         """See how long the bot takes to respond"""
         await ctx.send(f"Pong! {round(self.bot.latency * 1000, 1)} ms")

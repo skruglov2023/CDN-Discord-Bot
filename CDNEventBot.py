@@ -50,7 +50,7 @@ async def on_ready():
     # members = '\n - '.join([member.name for member in guild.members])
     # print(f'Guild Members:\n - {members}')
     await channel.send(f'{bot1.mention} is online')
-    cogs = ["admin_cog", "automated_cog", "basic_cog"]
+    cogs = ["admin_cog", "automated_cog", "basic_cog", "fun_cog"]
     for cog in cogs:
         bot.load_extension(cog)
 

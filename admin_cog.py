@@ -10,7 +10,7 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="status", pass_context=True)
+    @commands.command(name="status", pass_context=True, hidden=True)
     @commands.has_role("CDN Bot creator")
     async def status(self, ctx: commands.Context, *, new_status: str):
         """Sets the bot's status"""
@@ -42,7 +42,7 @@ class Admin(commands.Cog):
         embed.add_field(name=message.content, value="Role requested", inline=True)
         log_chan = self.bot.get_channel(881026004154482709)
         await log_chan.send(embed=embed)
-        await ctx.send(f"{role.name} given to {user.display_name}")
+        await ctx.reply(f"{role.name} given to {user.display_name}", mention_author=False)
         await stephan.send(f"{role.name} given to {user.display_name} by {ctx.author.display_name}")
 
     @give.error
@@ -67,7 +67,7 @@ class Admin(commands.Cog):
         embed.add_field(name=ctx.message.content, value="Role Created", inline=True)
         log_chan = self.bot.get_channel(881026004154482709)
         await log_chan.send(embed=embed)
-        await ctx.send(f"{role_name} was successfully created by {ctx.author.display_name}", delete_after=600)
+        await ctx.reply(f"{role_name} was successfully created by {ctx.author.display_name}", delete_after=600, mention_author=False)
         await stephan.send(f"{role_name} was created by {ctx.author.display_name}")
 
     @new_role.error
