@@ -47,12 +47,29 @@ async def on_ready():
     print(f'Logged in as {bot.user}')
     channel = bot.get_channel(881386384202530837)
     bot1 = bot.get_user(881243826767945738)
-    # members = '\n - '.join([member.name for member in guild.members])
-    # print(f'Guild Members:\n - {members}')
+    #members = '\n - '.join([user.display_name for user in guild.members])
+    #print(f'Guild Members:\n - {members}')
     await channel.send(f'{bot1.mention} is online')
-    cogs = ["admin_cog", "automated_cog", "basic_cog", "fun_cog"]
+    cogs = ["cogs.admin_cog", "cogs.automated_cog", "cogs.basic_cog", "cogs.fun_cog"]
     for cog in cogs:
         bot.load_extension(cog)
+
+
+@bot.command(name="reload", pass_context=True, hidden=True)
+@commands.has_role("CDN Bot creator")
+async def reload_cog(ctx: commands.Context, reloadable):
+    print(reloadable)
+    """Reloads a cog after an update, instead of reloading the entire bot"""
+    bot.reload_extension(f"cogs.{reloadable}")
+    print(f"cog reloaded: {reloadable}")
+
+
+@reload_cog.error
+async def reload_cog_error(ctx, error):
+    if isinstance(error, commands.MissingRole):
+        await ctx.send("You don\'t have the required role to do this", delete_after=15)
+    else:
+        await ctx.send(error)
 
 #@bot.event
 #async def on_message(message):
@@ -62,17 +79,7 @@ async def on_ready():
 #    mgs = []
 #    for word in badwords:
 #        if word in msg:
-##            await message.delete()
+#            await message.delete()
 #            await message.channel.send(f'{message.author.mention} That word is not allowed', delete_after=15)
-#    event_channel = bot.get_channel(881550954527326228)
-#    if "happy birthday" in message.content.lower():
-#        await message.channel.send('Happy Birthday! 🎈🎉')
-#    elif message.channel == event_channel:
-#        yes = "⬆️"
-#        no = "⬇️"
-#        maybe = "↔"
-#        await message.add_reaction(yes)
-#        await message.add_reaction(no)
-#        await message.add_reaction(maybe)
 
 bot.run(TOKEN)

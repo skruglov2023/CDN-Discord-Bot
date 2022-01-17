@@ -16,6 +16,12 @@ class Fun(commands.Cog):
         await ctx.send(' '.join(ctx.message.content.split()[1:]))
         await ctx.message.delete()
 
+    @commands.command(pass_context=True)
+    async def dm(self, ctx: commands.Context, user: discord.Member = None, *, message):
+        """DMs a user"""
+        await user.send(message)
+        await ctx.message.delete()
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))

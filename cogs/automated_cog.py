@@ -63,6 +63,26 @@ class AutomatedStuff(commands.Cog):
             await member.remove_roles(role)
 
     @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.bot:
+            return
+        stephan = self.bot.get_user(675726066018680861)
+        # below is for saying "happy birthday" if someone says it
+        if "happy birthday" in message.content.lower():
+            await message.channel.send('Happy Birthday! 🎈🎉')
+        # below is for adding reactions to messages in 'events'
+        yes = "⬆️"
+        no = "⬇️"
+        maybe = "↔"
+        if message.channel == self.bot.get_channel(881550954527326228):
+            await message.add_reaction(yes)
+            await message.add_reaction(no)
+            await message.add_reaction(maybe)
+        if isinstance(message.channel, discord.channel.DMChannel):
+            await message.channel.send("Please don\'t respond here, I can\'t do anything with the message")
+            await stephan.send(message.content)
+
+    @commands.Cog.listener()
     async def on_raw_reaction_add(self, reaction):
         gid = self.bot.get_guild(875158282422067230)
         role_message = 926424422175367218
