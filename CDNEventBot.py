@@ -53,6 +53,11 @@ async def on_ready():
     cogs = ["cogs.admin_cog", "cogs.automated_cog", "cogs.basic_cog", "cogs.fun_cog"]
     for cog in cogs:
         bot.load_extension(cog)
+    #for deleting dm messages
+    #msgs=[]
+    #for msg in msgs:
+    #    await bot.http.delete_message(881403952875339817, msg)
+    #    print(msg)
 
 
 @bot.command(name="reload", pass_context=True, hidden=True)

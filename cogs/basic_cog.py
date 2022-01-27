@@ -26,6 +26,7 @@ class Basic(commands.Cog):
         await ctx.send(error)
 
     @commands.command(name="welcome")
+    @commands.guild_only()
     async def welcome(self, ctx: commands.Context, user: discord.User):
         """Sends the welcome message if someone needs instructions on what they have to do"""
         role_channel = self.bot.get_channel(881007767018700860)
@@ -53,6 +54,7 @@ class Basic(commands.Cog):
         await ctx.send("Either something is broken or you do not exist")
 
     @commands.command(name="events")
+    @commands.guild_only()
     async def events(self, ctx: commands.Context):
         """Shows events that club/team leaders have submitted to our spreadsheet"""
         exec(open(path0).read())
@@ -92,6 +94,7 @@ class Basic(commands.Cog):
         await ctx.send("Either something is broken or you do not exist")
 
     @commands.command("giveme")
+    @commands.guild_only()
     @commands.has_role("CDN member")
     async def giveme(self, ctx: commands.Context, *, role: discord.Role):
         """Gives a role to the person asking"""

@@ -11,7 +11,7 @@ class Admin(commands.Cog):
         self.bot = bot
 
     @commands.command(name="status", pass_context=True, hidden=True)
-    @commands.has_role("CDN Bot creator")
+    @commands.is_owner()
     async def status(self, ctx: commands.Context, *, new_status: str):
         """Sets the bot's status"""
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=new_status))
@@ -28,6 +28,7 @@ class Admin(commands.Cog):
             await ctx.send(error)
 
     @commands.command(name="give", pass_context=True)
+    @commands.guild_only()
     @commands.has_role("Producers")
     async def give(self, ctx: commands.Context, user: discord.Member, role: discord.Role):
         """Gives a role to someone"""
@@ -57,6 +58,7 @@ class Admin(commands.Cog):
             await ctx.send("An unknown error has occurred")
 
     @commands.command(name="createrole", pass_context=True)
+    @commands.guild_only()
     @commands.has_role("Producers")
     async def new_role(self, ctx: commands.Context, role_name):
         """Creates a role"""
@@ -84,6 +86,7 @@ class Admin(commands.Cog):
             await ctx.send(error)
 
     @commands.command("clear")
+    @commands.guild_only()
     @commands.has_role("Producers")
     async def clear(self, ctx: commands.Context, *, num_delete):
         """Clears up to 25 messages, excluding your command"""

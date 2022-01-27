@@ -11,6 +11,7 @@ class AutomatedStuff(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_member_join(self, member):
         channell = self.bot.get_channel(881007767018700860)
         embed = discord.Embed(title=f"Welcome {member}",
@@ -26,6 +27,7 @@ class AutomatedStuff(commands.Cog):
             that is called /#roles-name-change-requests and tell us what you do for CDN and what your name is""")
 
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_message_delete(self, message):
         """Logs message deletions"""
         author = message.author.display_name
@@ -40,6 +42,7 @@ class AutomatedStuff(commands.Cog):
         await channel.send(embed=embed)
 
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_message_edit(self, message_before, message_after):
         """Logs message edits"""
         if message_after.embeds > []:
@@ -54,6 +57,7 @@ class AutomatedStuff(commands.Cog):
             await channel.send(embed=embed)
 
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_voice_state_update(self, member, before, after):
         """Adds/Removes Voice role when you join/leave a call"""
         role = discord.utils.get(member.guild.roles, name="Voice")
@@ -63,6 +67,7 @@ class AutomatedStuff(commands.Cog):
             await member.remove_roles(role)
 
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_message(self, message):
         if message.author.bot:
             return
@@ -78,11 +83,12 @@ class AutomatedStuff(commands.Cog):
             await message.add_reaction(yes)
             await message.add_reaction(no)
             await message.add_reaction(maybe)
-        if isinstance(message.channel, discord.channel.DMChannel):
-            await message.channel.send("Please don\'t respond here, I can\'t do anything with the message")
-            await stephan.send(message.content)
+#        if isinstance(message.channel, discord.channel.DMChannel):
+#            await message.channel.send("Please don\'t respond here, I can\'t do anything with the message", delete_after=10)
+#            await stephan.send(message.content, delete_after=60*60*12)
 
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_raw_reaction_add(self, reaction):
         gid = self.bot.get_guild(875158282422067230)
         role_message = 926424422175367218
@@ -131,6 +137,7 @@ class AutomatedStuff(commands.Cog):
                 await userid.add_roles(role)
 
     @commands.Cog.listener()
+    @commands.guild_only()
     async def on_raw_reaction_remove(self, reaction):
         gid = self.bot.get_guild(875158282422067230)
         role_message = 926424422175367218
