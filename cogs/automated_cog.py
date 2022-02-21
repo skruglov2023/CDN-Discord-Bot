@@ -2,6 +2,10 @@
 
 from discord.ext import commands
 import discord
+lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
+#GuildPath='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion.txt'
+
+global lastDeleteId
 
 
 class AutomatedStuff(commands.Cog):
@@ -30,11 +34,23 @@ class AutomatedStuff(commands.Cog):
     @commands.guild_only()
     async def on_message_delete(self, message):
         """Logs message deletions"""
+        with open(lastId, 'r') as last_id:
+            lastDeleteId = last_id.read()
         author = message.author.display_name
         this_channel = message.channel
         content = message.content
         async for message in message.guild.audit_logs(action=discord.AuditLogAction.message_delete, limit=1):
-            deleter = message.user.name
+            #print(message)
+            this_id = str(message.id)
+            if this_id == lastDeleteId:
+                #print("deleted by author")
+                deleter = author
+            else:
+                #print("deleted by mod")
+                deleter = message.user.name
+                lastDeleteId = this_id
+                with open(lastId, 'w') as last_id:
+                    last_id.write(str(lastDeleteId))
         embed = discord.Embed(title=f"{author}'s message in {this_channel} was deleted by {deleter}", description="",
                               color=discord.Colour.red())
         embed.add_field(name=content, value="Deleted Message", inline=True)

@@ -31,6 +31,7 @@ intents.members = True
 intents.reactions = True
 bot = commands.Bot(command_prefix="$", intents=intents)
 
+
 with open(path3, 'r') as f:
     global badwords  # You want to be able to access this throughout the code
     words = f.read()
@@ -63,10 +64,13 @@ async def on_ready():
 @bot.command(name="reload", pass_context=True, hidden=True)
 @commands.has_role("CDN Bot creator")
 async def reload_cog(ctx: commands.Context, reloadable):
-    print(reloadable)
+#    print(reloadable)
     """Reloads a cog after an update, instead of reloading the entire bot"""
     bot.reload_extension(f"cogs.{reloadable}")
-    print(f"cog reloaded: {reloadable}")
+    embed = discord.Embed(color=discord.colour.Color.blurple())
+    embed.add_field(name="Cog reloaded", value=reloadable)
+    await ctx.send(embed=embed)
+#    print(f"cog reloaded: {reloadable}")
 
 
 @reload_cog.error
@@ -75,6 +79,7 @@ async def reload_cog_error(ctx, error):
         await ctx.send("You don\'t have the required role to do this", delete_after=15)
     else:
         await ctx.send(error)
+
 
 #@bot.event
 #async def on_message(message):
