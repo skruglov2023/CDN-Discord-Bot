@@ -27,7 +27,7 @@ class Admin(commands.Cog):
         else:
             await ctx.send(error)
 
-    @commands.command(name="give", pass_context=True)
+    @commands.command(name="give", pass_context=True, aliases=["giverole", "givethemrole"])
     @commands.guild_only()
     @commands.has_role("Producers")
     async def give(self, ctx: commands.Context, user: discord.Member, role: discord.Role):
@@ -57,7 +57,7 @@ class Admin(commands.Cog):
         else:
             await ctx.send("An unknown error has occurred")
 
-    @commands.command(name="createrole", pass_context=True)
+    @commands.command(name="createrole", pass_context=True, aliases=["newrole", "createandgiverole"])
     @commands.guild_only()
     @commands.has_role("Producers")
     async def new_role(self, ctx: commands.Context, role_name):

@@ -93,7 +93,7 @@ class Basic(commands.Cog):
     async def show_error(self, ctx, error):
         await ctx.send("Either something is broken or you do not exist")
 
-    @commands.command("giveme")
+    @commands.command(name="giveme", aliases=["givemerole", "giverole"])
     @commands.guild_only()
     @commands.has_role("CDN member")
     async def giveme(self, ctx: commands.Context, *, role: discord.Role):
@@ -126,6 +126,21 @@ class Basic(commands.Cog):
             await ctx.send("Recruits can\'t ask for roles", delete_after=15)
         else:
             await ctx.send(error)
+
+    @commands.command(name="showroles", aliases=["roles", "giveme roles", "givethem roles", "give roles"])
+    @commands.guild_only()
+    @commands.has_role("CDN member")
+    async def showroles(self, ctx):
+        """Lists all available roles in the server"""
+        roles = '\n - '.join([role.name for role in ctx.guild.roles][1:25])
+        #            print(f'Roles:\n - {roles}')
+        help_string = roles
+        embed = discord.Embed(title="Available CDN Discord Roles", description="", color=discord.Colour.from_rgb(234, 170, 0))
+        embed.add_field(
+                name='Use $giveme/$givethem with any role above the CDN Events role \nKeep in mind that none of these '
+                     'roles give anything special \n',
+                value=f"- {help_string}", inline=True)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
