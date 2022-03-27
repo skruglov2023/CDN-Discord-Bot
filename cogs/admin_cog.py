@@ -34,7 +34,7 @@ class Admin(commands.Cog):
         else:
             await ctx.send(error)
 
-    @commands.command(name="give", pass_context=True, aliases=["givethemrole"])
+    @commands.command(name="give", pass_context=True, aliases=["givethemrole", "givethem"])
     @commands.guild_only()
     @commands.has_role("Producers")
     async def give(self, ctx: commands.Context, user: discord.Member, role: discord.Role):

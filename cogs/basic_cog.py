@@ -3,12 +3,12 @@
 from discord.ext import commands
 import discord
 import gdown
-#path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
-#path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
-#path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
-path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
-path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
-path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
+path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
+path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
+path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
+#path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
+#path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
+#path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
 
 
 class Basic(commands.Cog):

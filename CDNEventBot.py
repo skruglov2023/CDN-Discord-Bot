@@ -4,19 +4,19 @@ import discord
 from discord.ext import commands
 
 # windows paths
-#path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
-#path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
-#path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
-#path3 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\blocked_words.txt'
-#TokenPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_token'
-#GuildPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_guild'
+path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
+path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
+path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
+path3 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\blocked_words.txt'
+TokenPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_token'
+GuildPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_guild'
 # linux paths
-path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
-path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
-path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
-path3='/home/pi/Desktop/scripts/CDN-Discord-Bot/blocked_words.txt'
-TokenPath = '/home/pi/Desktop/scripts/CDN_token'
-GuildPath='/home/pi/Desktop/scripts/CDN_guild'
+#path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
+#path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
+#path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
+#path3='/home/pi/Desktop/scripts/CDN-Discord-Bot/blocked_words.txt'
+#TokenPath = '/home/pi/Desktop/scripts/CDN_token'
+#GuildPath='/home/pi/Desktop/scripts/CDN_guild'
 
 with open(GuildPath, 'r') as guil:
     global GUILD
@@ -44,11 +44,11 @@ async def on_ready():
         if guild.name == GUILD:
             break
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Server commands"))
-    # print(f'{bot.user} is connected to the following guild:\n {guild.name}(id: {guild.id})')
-    print(f'Logged in as {bot.user}')
-    channel = bot.get_channel(881386384202530837)
+    #print(f'{bot.user} is connected to the following guild:\n {guild.name}(id: {guild.id})')
+    #print(f'Logged in as {bot.user}')
+    channel = bot.get_channel(949144781227954247)
     bot1 = bot.get_user(881243826767945738)
-    #members = '\n - '.join([user.display_name for user in guild.members])
+    members = '\n - '.join([user.display_name for user in guild.members])
     #print(f'Guild Members:\n - {members}')
     await channel.send(f'{bot1.mention} is online')
     cogs = ["cogs.admin_cog", "cogs.automated_cog", "cogs.basic_cog", "cogs.fun_cog"]
