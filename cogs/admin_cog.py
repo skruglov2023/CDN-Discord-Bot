@@ -9,9 +9,14 @@ class Admin(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        
+    def is_me():
+        def predicate(ctx):
+            return ctx.message.author.id == 675726066018680861 or ctx.message.author.id == 361537594112081951
+        return commands.check(predicate) 
 
     @commands.command(name="status", pass_context=True, hidden=True)
-    @commands.is_owner()
+    @is_me()
     async def status(self, ctx: commands.Context, *, new_status: str):
         """Sets the bot's status"""
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=new_status))
@@ -24,10 +29,12 @@ class Admin(commands.Cog):
             await ctx.send("You forgot the status", delete_after=10)
         elif isinstance(error, commands.MissingRole):
             await ctx.send("You don't have the role required to do this", delete_after=15, tts=True)
+        elif isinstance(error, commands.CheckFailure):
+            await ctx.send("You\'re testing my patience now, stop trying to change the status on the bot", tts=True, delete_after=60)
         else:
             await ctx.send(error)
 
-    @commands.command(name="give", pass_context=True, aliases=["giverole", "givethemrole"])
+    @commands.command(name="give", pass_context=True, aliases=["givethemrole"])
     @commands.guild_only()
     @commands.has_role("Producers")
     async def give(self, ctx: commands.Context, user: discord.Member, role: discord.Role):

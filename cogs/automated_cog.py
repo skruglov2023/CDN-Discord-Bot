@@ -2,8 +2,8 @@
 
 from discord.ext import commands
 import discord
-lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
-#lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion.txt'
+#lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
+lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
 

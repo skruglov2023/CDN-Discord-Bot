@@ -7,16 +7,16 @@ from discord.ext import commands
 #path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
 #path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
 #path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
-path3 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\blocked_words.txt'
-TokenPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_token'
-GuildPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_guild'
+#path3 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\blocked_words.txt'
+#TokenPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_token'
+#GuildPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_guild'
 # linux paths
-#path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
-#path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
-#path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
-#path3='/home/pi/Desktop/scripts/CDN-Discord-Bot/blocked_words.txt'
-#TokenPath = '/home/pi/Desktop/scripts/CDN_token'
-#GuildPath='/home/pi/Desktop/scripts/CDN_guild'
+path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
+path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
+path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
+path3='/home/pi/Desktop/scripts/CDN-Discord-Bot/blocked_words.txt'
+TokenPath = '/home/pi/Desktop/scripts/CDN_token'
+GuildPath='/home/pi/Desktop/scripts/CDN_guild'
 
 with open(GuildPath, 'r') as guil:
     global GUILD

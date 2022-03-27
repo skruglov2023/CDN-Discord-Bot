@@ -2,12 +2,13 @@
 
 from discord.ext import commands
 import discord
-path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
-path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
-path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
-#path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
-#path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
-#path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
+import gdown
+#path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
+#path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
+#path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
+path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
+path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
+path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
 
 
 class Basic(commands.Cog):
@@ -53,7 +54,7 @@ class Basic(commands.Cog):
     async def hello_error(self, ctx, error):
         await ctx.send("Either something is broken or you do not exist")
 
-    @commands.command(name="events")
+    @commands.command(name="events", aliases=["showevents"])
     @commands.guild_only()
     async def events(self, ctx: commands.Context):
         """Shows events that club/team leaders have submitted to our spreadsheet"""
