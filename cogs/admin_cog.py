@@ -113,6 +113,28 @@ class Admin(commands.Cog):
         else:
             await ctx.send(error)
 
+    @commands.command("sleep")
+    @commands.guild_only()
+    @commands.has_role("Mod")
+    async def channel_lock(self, ctx):
+        """Temporarily stops people from typing in the channel"""
+        role = discord.utils.get(ctx.guild.roles, name="CDN member")
+        perms = ctx.channel.overwrites_for(role)
+        perms.send_messages = False
+        await ctx.channel.set_permissions(role, overwrite=perms)
+        await ctx.send("Sleep! Or do some homework", delete_after=60)
+
+    @commands.command("unlock")
+    @commands.guild_only()
+    @commands.has_role("Mod")
+    async def channel_unlock(self, ctx):
+        """Temporarily stops people from typing in the channel"""
+        role = discord.utils.get(ctx.guild.roles, name="CDN member")
+        perms = ctx.channel.overwrites_for(role)
+        perms.send_messages = True
+        await ctx.channel.set_permissions(role, overwrite=perms)
+        await ctx.send("Enjoy the rest of your day", delete_after=60)
+
 
 def setup(bot):
     bot.add_cog(Admin(bot))

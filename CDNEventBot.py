@@ -62,7 +62,7 @@ async def on_ready():
 
 
 @bot.command(name="reload", pass_context=True, hidden=True)
-@commands.has_role("CDN Bot creator")
+@commands.has_role("CDN Bot Creator")
 async def reload_cog(ctx: commands.Context, reloadable):
 #    print(reloadable)
     """Reloads a cog after an update, instead of reloading the entire bot"""
