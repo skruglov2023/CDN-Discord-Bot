@@ -148,8 +148,8 @@ class AutomatedStuff(commands.Cog):
             if ename == "😴":
                 role = discord.utils.get(gid.roles, name="Afterhours")
                 await userid.add_roles(role)
-            if ename == "🏒":
-                role = discord.utils.get(gid.roles, name="Hawkey Fan")
+            if eid == 958196788689530941:
+                role = discord.utils.get(gid.roles, name="Can edit from home")
                 await userid.add_roles(role)
 
     @commands.Cog.listener()
@@ -197,8 +197,8 @@ class AutomatedStuff(commands.Cog):
             if ename == "😴":
                 role = discord.utils.get(gid.roles, name="Afterhours")
                 await userid.remove_roles(role)
-            if ename == "🏒":
-                role = discord.utils.get(gid.roles, name="Hawkey Fan")
+            if eid == 958196788689530941:
+                role = discord.utils.get(gid.roles, name="Can edit from home")
                 await userid.remove_roles(role)
 
 
