@@ -2,8 +2,9 @@
 
 from discord.ext import commands
 import discord
-#lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
-lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
+
+lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
+# lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
 
@@ -40,13 +41,13 @@ class AutomatedStuff(commands.Cog):
         this_channel = message.channel
         content = message.content
         async for message in message.guild.audit_logs(action=discord.AuditLogAction.message_delete, limit=1):
-            #print(message)
+            # print(message)
             this_id = str(message.id)
             if this_id == lastDeleteId:
-                #print("deleted by author")
+                # print("deleted by author")
                 deleter = author
             else:
-                #print("deleted by mod")
+                # print("deleted by mod")
                 deleter = message.user.name
                 lastDeleteId = this_id
                 with open(lastId, 'w') as last_id:
@@ -99,20 +100,26 @@ class AutomatedStuff(commands.Cog):
             await message.add_reaction(yes)
             await message.add_reaction(no)
             await message.add_reaction(maybe)
-#        if isinstance(message.channel, discord.channel.DMChannel):
-#            await message.channel.send("Please don\'t respond here, I can\'t do anything with the message", delete_after=10)
-#            await stephan.send(message.content, delete_after=60*60*12)
+
+    #        if isinstance(message.channel, discord.channel.DMChannel):
+    #            await message.channel.send("Please don\'t respond here, I can\'t do anything with the message", delete_after=10)
+    #            await stephan.send(message.content, delete_after=60*60*12)
 
     @commands.Cog.listener()
     @commands.guild_only()
     async def on_raw_reaction_add(self, reaction):
         gid = self.bot.get_guild(875158282422067230)
         role_message = 926424422175367218
+        bot_testing = self.bot.get_channel(949144781227954247)
         eid = reaction.emoji.id
         ename = reaction.emoji.name
         channel = self.bot.get_channel(reaction.channel_id)
         userid = gid.get_member(reaction.user_id)
+        role = discord.utils.get(gid.roles, name="Recruit")
         if reaction.message_id == role_message:
+            if role in userid.roles:
+                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", delete_after=60)
+                return
             if eid == 900172591141097602:
                 await channel.send("Yes, this is in fact Stephan", tts=True, delete_after=60)
             if eid == 926404937049579520:
@@ -161,7 +168,11 @@ class AutomatedStuff(commands.Cog):
         ename = reaction.emoji.name
         channel = self.bot.get_channel(reaction.channel_id)
         userid = gid.get_member(reaction.user_id)
+        role = discord.utils.get(gid.roles, name="Recruit")
         if reaction.message_id == role_message:
+            if role in userid.roles:
+                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", delete_after=60)
+                return
             if eid == 900172591141097602:
                 await channel.send("How dare you remove Stephan", tts=True, delete_after=60)
             if eid == 926404937049579520:
