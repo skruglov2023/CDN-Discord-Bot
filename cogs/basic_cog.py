@@ -3,12 +3,12 @@
 from discord.ext import commands
 import discord
 import gdown
-path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
-path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
-path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
-#path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
-#path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
-#path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
+#path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
+#path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
+#path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
+path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
+path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
+path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
 
 
 class Basic(commands.Cog):
@@ -101,7 +101,7 @@ class Basic(commands.Cog):
         """Gives a role to the person asking"""
         role_change = self.bot.get_channel(881007767018700860)
         message = ctx.message
-        if role.name == "Voice":
+        if role.name == "Voice" or role=="Recruit":
             await ctx.send("You can't have this role", delete_after=15)
             await message.delete()
         elif message.channel == role_change:

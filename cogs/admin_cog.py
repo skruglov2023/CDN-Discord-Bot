@@ -10,13 +10,13 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    def is_me():
+    def is_me_or_hannah():
         def predicate(ctx):
             return ctx.message.author.id == 675726066018680861 or ctx.message.author.id == 361537594112081951
         return commands.check(predicate) 
 
     @commands.command(name="status", pass_context=True, hidden=True)
-    @is_me()
+    @is_me_or_hannah()
     async def status(self, ctx: commands.Context, *, new_status: str):
         """Sets the bot's status"""
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=new_status))
@@ -41,7 +41,7 @@ class Admin(commands.Cog):
         """Gives a role to someone"""
         stephan = self.bot.get_user(675726066018680861)
         message = ctx.message
-        if role == "Voice":
+        if role == "Voice" or role == "Recruit":
             await ctx.send("You can't give this role", delete_after=10)
             await message.delete()
         await user.add_roles(role)
@@ -128,7 +128,7 @@ class Admin(commands.Cog):
     @commands.guild_only()
     @commands.has_role("Mod")
     async def channel_unlock(self, ctx):
-        """Temporarily stops people from typing in the channel"""
+        """Reverts changes made through $sleep"""
         role = discord.utils.get(ctx.guild.roles, name="CDN member")
         perms = ctx.channel.overwrites_for(role)
         perms.send_messages = True
