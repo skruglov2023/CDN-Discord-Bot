@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import asyncio
 
 from discord.ext import commands
 import discord
@@ -116,13 +117,17 @@ class Admin(commands.Cog):
     @commands.command("sleep")
     @commands.guild_only()
     @commands.has_role("Mod")
-    async def channel_lock(self, ctx):
+    async def channel_lock(self, ctx: commands.Context, minutes: int):
         """Temporarily stops people from typing in the channel"""
         role = discord.utils.get(ctx.guild.roles, name="CDN member")
         perms = ctx.channel.overwrites_for(role)
         perms.send_messages = False
         await ctx.channel.set_permissions(role, overwrite=perms)
         await ctx.send("Sleep! Or do some homework", delete_after=60)
+        perms.send_messages = True
+        await asyncio.sleep(minutes*60)
+        await ctx.channel.set_permissions(role, overwrite=perms)
+        await ctx.send("Channel unlocked, enjoy the rest of your day", delete_after=120)
 
     @commands.command("unlock")
     @commands.guild_only()
