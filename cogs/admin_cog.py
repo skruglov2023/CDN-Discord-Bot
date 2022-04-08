@@ -123,7 +123,7 @@ class Admin(commands.Cog):
         perms = ctx.channel.overwrites_for(role)
         perms.send_messages = False
         await ctx.channel.set_permissions(role, overwrite=perms)
-        await ctx.send("Sleep! Or do some homework", delete_after=60)
+        await ctx.send(f"Sleep! Or do some homework. You have {minutes} minutes to do so", delete_after=60)
         perms.send_messages = True
         await asyncio.sleep(minutes*60)
         await ctx.channel.set_permissions(role, overwrite=perms)
