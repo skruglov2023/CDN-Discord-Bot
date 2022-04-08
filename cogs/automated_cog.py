@@ -3,8 +3,8 @@
 from discord.ext import commands
 import discord
 
-#lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
-lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
+lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
+#lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
 
@@ -100,10 +100,11 @@ class AutomatedStuff(commands.Cog):
             await message.add_reaction(yes)
             await message.add_reaction(no)
             await message.add_reaction(maybe)
-
-    #        if isinstance(message.channel, discord.channel.DMChannel):
-    #            await message.channel.send("Please don\'t respond here, I can\'t do anything with the message", delete_after=10)
-    #            await stephan.send(message.content, delete_after=60*60*12)
+        if isinstance(message.channel, discord.channel.DMChannel):
+            if message.author.bot:
+                return
+            await message.channel.send("Please don\'t respond here, I can\'t do anything with the message", delete_after=10)
+            await stephan.send(message.content, delete_after=3600)
 
     @commands.Cog.listener()
     @commands.guild_only()
