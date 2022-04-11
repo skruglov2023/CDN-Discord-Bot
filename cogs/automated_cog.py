@@ -115,11 +115,21 @@ class AutomatedStuff(commands.Cog):
         eid = reaction.emoji.id
         ename = reaction.emoji.name
         channel = self.bot.get_channel(reaction.channel_id)
+        message_id = await channel.fetch_message(reaction.message_id)
+        emoji = self.bot.get_emoji(eid)
         userid = gid.get_member(reaction.user_id)
         role = discord.utils.get(gid.roles, name="Recruit")
+        #print(f"{eid}, {ename}")
+        #print(f"reaction channel: {channel}, bot testing channel: {bot_testing}")
+#        if channel==bot_testing:
+#            await message_id.remove_reaction(emoji, userid)
+#            print(f"removed reaction {eid}, {ename}")
+#            await bot_testing.send(f"{eid}/{ename} reaction from {userid.display_name} was removed due to lack of roles")
         if reaction.message_id == role_message:
             if role in userid.roles:
-                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", delete_after=60)
+                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet, "
+                                       f"including the {role} role that you just requested", delete_after=60)
+                await message_id.remove_reaction(emoji, userid)
                 return
             if eid == 900172591141097602:
                 await channel.send("Yes, this is in fact Stephan", tts=True, delete_after=60)
