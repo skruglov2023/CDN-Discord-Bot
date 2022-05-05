@@ -167,7 +167,7 @@ class Admin(commands.Cog):
     @commands.has_role("Mod")
     async def channel_lock(self, ctx: commands.Context, minutes: int):
         """Temporarily stops people from typing in the channel"""
-        role = discord.utils.get(ctx.guild.roles, name="CDN member")
+        role = discord.utils.get(ctx.guild.roles, name="Fam")
         perms = ctx.channel.overwrites_for(role)
         perms.send_messages = False
         await ctx.channel.set_permissions(role, overwrite=perms)
@@ -182,7 +182,7 @@ class Admin(commands.Cog):
     @commands.has_role("Mod")
     async def channel_unlock(self, ctx):
         """Reverts changes made through $sleep"""
-        role = discord.utils.get(ctx.guild.roles, name="CDN member")
+        role = discord.utils.get(ctx.guild.roles, name="Fam")
         perms = ctx.channel.overwrites_for(role)
         perms.send_messages = True
         await ctx.channel.set_permissions(role, overwrite=perms)

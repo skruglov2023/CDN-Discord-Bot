@@ -118,7 +118,7 @@ class Basic(commands.Cog):
 
     @commands.hybrid_command(name="giveme", aliases=["givemerole", "giverole"])
     @commands.guild_only()
-    @commands.has_role("CDN member")
+    @commands.has_role("Fam")
     async def giveme(self, ctx: commands.Context, *, role: discord.Role):
         """Gives a role to the person asking"""
         role_change = self.bot.get_channel(881007767018700860)
@@ -160,7 +160,7 @@ class Basic(commands.Cog):
 
     @commands.hybrid_command(name="showroles", aliases=["roles", "giveme roles", "givethem roles", "give roles"])
     @commands.guild_only()
-    @commands.has_role("CDN member")
+    @commands.has_role("Fam")
     async def showroles(self, ctx):
         """Lists all available roles in the server"""
         roles = '\n - '.join([role.name for role in ctx.guild.roles][1:25])
