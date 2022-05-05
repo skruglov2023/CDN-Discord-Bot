@@ -11,13 +11,35 @@ path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
 path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
 
 
+class Confirm(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
+
+    # When the confirm button is pressed, set the inner value to `True` and
+    # stop the View from listening to more input.
+    # We also send the user an ephemeral message that we're confirming their choice.
+    @discord.ui.button(label='Proceed', style=discord.ButtonStyle.red)
+    async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message('Proceeding', ephemeral=True)
+        self.value = True
+        self.stop()
+
+    # This one is similar to the confirmation button except sets the inner value to `False`
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.green)
+    async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message('No action taken', ephemeral=True)
+        self.value = False
+        self.stop()
+
+
 class Basic(commands.Cog):
     """Anyone can use these"""
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @commands.command(name="ping", hidden=True)
+    @commands.hybrid_command(name="ping", hidden=True)
     async def ping(self, ctx: commands.Context):
         """See how long the bot takes to respond"""
         await ctx.send(f"Pong! {round(self.bot.latency * 1000, 1)} ms")
@@ -26,14 +48,14 @@ class Basic(commands.Cog):
     async def ping_error(self, ctx, error):
         await ctx.send(error)
 
-    @commands.command(name="welcome")
+    @commands.hybrid_command(name="welcome")
     @commands.guild_only()
     async def welcome(self, ctx: commands.Context, user: discord.User):
         """Sends the welcome message if someone needs instructions on what they have to do"""
         role_channel = self.bot.get_channel(881007767018700860)
         await ctx.send(
             f'Welcome, {user.display_name}, to CDN\'s Discord Server. Please go to {role_channel.mention} to tell us your '
-            f'name and what your role(s) is/are in CDN. You can request certain roles with $giveme role')
+            f'name and what your role(s) is/are in CDN. You can request certain roles with $giveme role', ephemeral=True)
 
     @welcome.error
     async def welcome_error(self, ctx, error):
@@ -44,7 +66,7 @@ class Basic(commands.Cog):
         else:
             await ctx.send(error)
 
-    @commands.command()
+    @commands.hybrid_command()
     async def hello(self, ctx: commands.Context):
         """I say hello if you say hello"""
         if 'hello' in ctx.message.content.lower():
@@ -54,7 +76,7 @@ class Basic(commands.Cog):
     async def hello_error(self, ctx, error):
         await ctx.send("Either something is broken or you do not exist")
 
-    @commands.command(name="events", aliases=["showevents"])
+    @commands.hybrid_command(name="events", aliases=["showevents"])
     @commands.guild_only()
     async def events(self, ctx: commands.Context):
         """Shows events that club/team leaders have submitted to our spreadsheet"""
@@ -71,7 +93,7 @@ class Basic(commands.Cog):
     async def event_error(self, ctx, error):
         await ctx.send(error)
 
-    @commands.command("show")
+    @commands.hybrid_command("show")
     async def show(self, ctx: commands.Context, user: discord.Member = None):
         """Shows user's information"""
         message = ctx.message
@@ -94,7 +116,7 @@ class Basic(commands.Cog):
     async def show_error(self, ctx, error):
         await ctx.send("Either something is broken or you do not exist")
 
-    @commands.command(name="giveme", aliases=["givemerole", "giverole"])
+    @commands.hybrid_command(name="giveme", aliases=["givemerole", "giverole"])
     @commands.guild_only()
     @commands.has_role("CDN member")
     async def giveme(self, ctx: commands.Context, *, role: discord.Role):
@@ -104,14 +126,22 @@ class Basic(commands.Cog):
         if role.name == "Voice" or role=="Recruit":
             await ctx.send("You can't have this role", delete_after=15)
             await message.delete()
-        elif message.channel == role_change:
-            await message.author.add_roles(role)
-            embed = discord.Embed(title=f"{message.author.display_name} requested {role.name}", description="",
-                                  color=discord.Colour.blue())
-            embed.add_field(name=message.content, value="Role request", inline=True)
-            log_chan = self.bot.get_channel(881026004154482709)
-            await log_chan.send(embed=embed)
-            await ctx.send(embed=embed)
+        elif message.channel==role_change:
+            view = Confirm()
+            await ctx.send('Do you want to continue?', view=view, ephemeral=True, delete_after=30)
+            await view.wait()
+            if view.value is None:
+                return
+            elif view.value:
+                await message.author.add_roles(role)
+                embed=discord.Embed(title=f"{message.author.display_name} requested {role.name}", description="",
+                                    color=discord.Colour.blue())
+                embed.add_field(name=message.content, value="Role request", inline=True)
+                log_chan=self.bot.get_channel(881026004154482709)
+                await log_chan.send(embed=embed)
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send("Role not given", ephemeral=True)
         else:
             await ctx.send(f"Roles can't be requested here. Please use {role_change.mention}",
                            delete_after=10)
@@ -128,7 +158,7 @@ class Basic(commands.Cog):
         else:
             await ctx.send(error)
 
-    @commands.command(name="showroles", aliases=["roles", "giveme roles", "givethem roles", "give roles"])
+    @commands.hybrid_command(name="showroles", aliases=["roles", "giveme roles", "givethem roles", "give roles"])
     @commands.guild_only()
     @commands.has_role("CDN member")
     async def showroles(self, ctx):
@@ -141,8 +171,8 @@ class Basic(commands.Cog):
                 name='Use $giveme/$givethem with any role above the CDN Events role \nKeep in mind that none of these '
                      'roles give anything special \n',
                 value=f"- {help_string}", inline=True)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed, ephemeral=True)
 
 
-def setup(bot):
-    bot.add_cog(Basic(bot))
+async def setup(bot):
+    await bot.add_cog(Basic(bot))

@@ -12,7 +12,7 @@ global lastDeleteId
 class AutomatedStuff(commands.Cog):
     """Stuff that the bot does on its own"""
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @commands.Cog.listener()
@@ -224,5 +224,5 @@ class AutomatedStuff(commands.Cog):
                 await userid.remove_roles(role)
 
 
-def setup(bot):
-    bot.add_cog(AutomatedStuff(bot))
+async def setup(bot):
+    await bot.add_cog(AutomatedStuff(bot))
