@@ -111,7 +111,7 @@ class Basic(commands.Cog):
             role_string = ' '.join([r.mention for r in user.roles][2:])
             embed.add_field(name="Roles:", value=role_string, inline=False)
         embed.set_footer(text='ID: ' + str(user.id))
-        await message.channel.send(embed=embed)
+        await ctx.send(embed=embed, ephemeral=True)
         if not ctx.interaction:
             await message.delete()
 
