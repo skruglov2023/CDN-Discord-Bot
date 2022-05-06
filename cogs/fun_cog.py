@@ -14,13 +14,16 @@ class Fun(commands.Cog):
     async def echo(self, ctx):
         """I repeat what you say"""
         await ctx.send(' '.join(ctx.message.content.split()[1:]))
-        await ctx.message.delete()
+        if not ctx.interaction:
+            await ctx.message.delete()
 
     @commands.hybrid_command(pass_context=True)
     async def dm(self, ctx: commands.Context, user: discord.Member = None, *, message):
         """DMs a user"""
         await user.send(message)
-        await ctx.message.delete()
+        await ctx.send(f"Message \"{message}\" sent to {user}", ephemeral=True)
+        if not ctx.interaction:
+            await ctx.message.delete()
 
     @commands.hybrid_command()
     async def joined(self, interaction: commands.Context, member: discord.Member = None):

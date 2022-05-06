@@ -76,7 +76,7 @@ async def on_ready():
     #print(f'Guild Members:\n - {members}')
     await channel.send(f'{bot1.mention} is online')
     #for deleting dm messages
-#    msgs=[]
+#    msgs=[918503766670585906]
 #    for msg in msgs:
 #        await bot.http.delete_message(881403952875339817, msg)
 #        print(msg)

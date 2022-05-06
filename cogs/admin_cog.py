@@ -149,7 +149,7 @@ class Admin(commands.Cog):
             return
         elif view.value:
             await ctx.channel.purge(limit=num_clear + 1)
-            await ctx.send(f"{ctx.message.author.nick} deleted the last {num_clear} messages", delete_after=30)
+            await ctx.send(f"{num_clear} messages have been deleted", ephemeral=True)
         else:
             return
 
@@ -165,7 +165,7 @@ class Admin(commands.Cog):
     @commands.hybrid_command("sleep")
     @commands.guild_only()
     @commands.has_role("Mod")
-    async def channel_lock(self, ctx: commands.Context, minutes: int):
+    async def channel_lock(self, ctx: commands.Context, minutes: int = None):
         """Temporarily stops people from typing in the channel"""
         role = discord.utils.get(ctx.guild.roles, name="Fam")
         perms = ctx.channel.overwrites_for(role)
@@ -173,6 +173,8 @@ class Admin(commands.Cog):
         await ctx.channel.set_permissions(role, overwrite=perms)
         await ctx.send(f"Sleep! Or do some homework. You have {minutes} minutes to do so", delete_after=60)
         perms.send_messages = None
+        if minutes is None:
+            return
         await asyncio.sleep(minutes*60)
         await ctx.channel.set_permissions(role, overwrite=perms)
         await ctx.send("Channel unlocked, enjoy the rest of your day", delete_after=120)

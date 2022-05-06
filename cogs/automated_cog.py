@@ -35,6 +35,8 @@ class AutomatedStuff(commands.Cog):
     @commands.guild_only()
     async def on_message_delete(self, message):
         """Logs message deletions"""
+        if message.interaction:
+            return
         with open(lastId, 'r') as last_id:
             lastDeleteId = last_id.read()
         author = message.author.display_name

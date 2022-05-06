@@ -55,7 +55,7 @@ class Basic(commands.Cog):
         role_channel = self.bot.get_channel(881007767018700860)
         await ctx.send(
             f'Welcome, {user.display_name}, to CDN\'s Discord Server. Please go to {role_channel.mention} to tell us your '
-            f'name and what your role(s) is/are in CDN. You can request certain roles with $giveme role', ephemeral=True)
+            f'name and what your role(s) is/are in CDN. You can request certain roles with $giveme role', ephemeral=False)
 
     @welcome.error
     async def welcome_error(self, ctx, error):
@@ -87,7 +87,8 @@ class Basic(commands.Cog):
         cdn_events = open(path2, 'r')
         #        print("reading google sheet")
         await ctx.message.channel.send(cdn_events.read())
-        await ctx.message.delete()
+        if not ctx.interaction:
+            await ctx.message.delete()
 
     @events.error
     async def event_error(self, ctx, error):
@@ -99,10 +100,11 @@ class Basic(commands.Cog):
         message = ctx.message
         if user is None:
             user = ctx.author
+        print(user)
         date_format = "%a, %d %b %Y %I:%M %p"
         embed = discord.Embed(color=0xdfa3ff, description=user.mention)
-        embed.set_author(name=str(user), icon_url=user.avatar_url)
-        embed.set_thumbnail(url=user.avatar_url)
+        embed.set_author(name=str(user), icon_url=user.display_avatar)
+        embed.set_thumbnail(url=user.display_avatar)
         embed.add_field(name="Joined", value=user.joined_at.strftime(date_format))
         embed.add_field(name="Registered", value=user.created_at.strftime(date_format))
         if len(user.roles) > 1:
@@ -110,11 +112,13 @@ class Basic(commands.Cog):
             embed.add_field(name="Roles:", value=role_string, inline=False)
         embed.set_footer(text='ID: ' + str(user.id))
         await message.channel.send(embed=embed)
-        await message.delete()
+        if not ctx.interaction:
+            await message.delete()
 
     @show.error
     async def show_error(self, ctx, error):
-        await ctx.send("Either something is broken or you do not exist")
+        #await ctx.send("Either something is broken or you do not exist")
+        print(error)
 
     @commands.hybrid_command(name="giveme", aliases=["givemerole", "giverole"])
     @commands.guild_only()
@@ -125,7 +129,8 @@ class Basic(commands.Cog):
         message = ctx.message
         if role.name == "Voice" or role=="Recruit":
             await ctx.send("You can't have this role", delete_after=15)
-            await message.delete()
+            if not ctx.interaction:
+                await message.delete()
         elif message.channel==role_change:
             view = Confirm()
             await ctx.send('Do you want to continue?', view=view, ephemeral=True, delete_after=30)
@@ -144,7 +149,8 @@ class Basic(commands.Cog):
                 await ctx.send("Role not given", ephemeral=True)
         else:
             await ctx.send(f"Roles can't be requested here. Please use {role_change.mention}",
-                           delete_after=10)
+                           delete_after=10, ephemeral=True)
+        if not ctx.interaction:
             await message.delete()
 
     @giveme.error
