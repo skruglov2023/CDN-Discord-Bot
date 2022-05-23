@@ -11,11 +11,13 @@ class Fun(commands.Cog):
         self.bot = bot
 
     @commands.hybrid_command()
-    async def echo(self, ctx):
+    async def echo(self, ctx: commands.Context, *, message):
         """I repeat what you say"""
-        await ctx.send(' '.join(ctx.message.content.split()[1:]))
         if not ctx.interaction:
+            await ctx.send(f'{message}')
             await ctx.message.delete()
+        else:
+            await ctx.send(f'{message}')
 
     @commands.hybrid_command(pass_context=True)
     async def dm(self, ctx: commands.Context, user: discord.Member = None, *, message):

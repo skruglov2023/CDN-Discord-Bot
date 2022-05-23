@@ -23,7 +23,7 @@ class AutomatedStuff(commands.Cog):
                               description=f"Thanks for joining {member.guild.name}! \n Please go to {channell.mention} to "
                                           f"tell us your name and what your role is in CDN (There can be multiple roles)",
                               color=discord.Color.green())
-        embed.set_thumbnail(url=member.avatar_url)  # Set the embed's thumbnail to the member's avatar image!
+        embed.set_thumbnail(url=member.display_avatar)  # Set the embed's thumbnail to the member's avatar image!
         await channell.send(embed=embed)
         #    print(member, "just joined")
         await member.create_dm()
@@ -36,6 +36,8 @@ class AutomatedStuff(commands.Cog):
     async def on_message_delete(self, message):
         """Logs message deletions"""
         if message.interaction:
+            return
+        if message.embeds>[]:
             return
         with open(lastId, 'r') as last_id:
             lastDeleteId = last_id.read()
@@ -130,7 +132,7 @@ class AutomatedStuff(commands.Cog):
         if reaction.message_id == role_message:
             if role in userid.roles:
                 await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet, "
-                                       f"including the {role} role that you just requested", delete_after=60)
+                                       f"including the {role} role that you just requested", delete_after=60, ephemeral=True)
                 await message_id.remove_reaction(emoji, userid)
                 return
             if eid == 900172591141097602:
@@ -151,13 +153,13 @@ class AutomatedStuff(commands.Cog):
                 role = discord.utils.get(gid.roles, name="Freshman")
                 await userid.add_roles(role)
             if ename == "⚓":
-                role = discord.utils.get(gid.roles, name="Host")
+                role = discord.utils.get(gid.roles, id=880250312823296070)
                 await userid.add_roles(role)
             if ename == "💻":
                 role = discord.utils.get(gid.roles, name="Editor")
                 await userid.add_roles(role)
             if ename == "✍️":
-                role = discord.utils.get(gid.roles, name="Writer")
+                role = discord.utils.get(gid.roles, name="Reporter")
                 await userid.add_roles(role)
             if ename == "📹" or ename == "📷":
                 role = discord.utils.get(gid.roles, name="Cameras")
@@ -184,7 +186,7 @@ class AutomatedStuff(commands.Cog):
         role = discord.utils.get(gid.roles, name="Recruit")
         if reaction.message_id == role_message:
             if role in userid.roles:
-                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", delete_after=60)
+                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", ephemeral=True)
                 return
             if eid == 900172591141097602:
                 await channel.send("How dare you remove Stephan", tts=True, delete_after=60)
@@ -204,13 +206,13 @@ class AutomatedStuff(commands.Cog):
                 role = discord.utils.get(gid.roles, name="Freshman")
                 await userid.remove_roles(role)
             if ename == "⚓":
-                role = discord.utils.get(gid.roles, name="Host")
+                role = discord.utils.get(gid.roles, id=880250312823296070)
                 await userid.remove_roles(role)
             if ename == "💻":
                 role = discord.utils.get(gid.roles, name="Editor")
                 await userid.remove_roles(role)
             if ename == "✍️":
-                role = discord.utils.get(gid.roles, name="Writer")
+                role = discord.utils.get(gid.roles, name="Reporter")
                 await userid.remove_roles(role)
             if ename == "📹" or ename == "📷":
                 role = discord.utils.get(gid.roles, name="Cameras")

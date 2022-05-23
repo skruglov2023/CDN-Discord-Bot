@@ -60,7 +60,7 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="give", pass_context=True, aliases=["givethemrole", "givethem"])
     @commands.guild_only()
-    @commands.has_role("Producers")
+    @commands.has_any_role("Executive Producers", "Assistant Producers")
     async def give(self, ctx: commands.Context, user: discord.Member, role: discord.Role):
         """Gives a role to someone"""
         stephan = self.bot.get_user(675726066018680861)
@@ -98,7 +98,7 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="createrole", pass_context=True, aliases=["newrole", "createandgiverole"])
     @commands.guild_only()
-    @commands.has_role("Producers")
+    @commands.has_any_role("Executive Producers", "Assistant Producers")
     async def new_role(self, ctx: commands.Context, role_name):
         """Creates a role"""
         stephan = self.bot.get_user(675726066018680861)
@@ -135,7 +135,7 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command("clear")
     @commands.guild_only()
-    @commands.has_role("Producers")
+    @commands.has_any_role("Executive Producers", "Assistant Producers")
     async def clear(self, ctx: commands.Context, *, num_delete):
         """Clears up to 99 messages, excluding your command"""
         num_clear = num_delete
@@ -164,7 +164,7 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command("sleep")
     @commands.guild_only()
-    @commands.has_role("Mod")
+    @commands.has_any_role("Executive Producers", "Assistant Producers")
     async def channel_lock(self, ctx: commands.Context, minutes: int = None):
         """Temporarily stops people from typing in the channel"""
         role = discord.utils.get(ctx.guild.roles, name="Fam")
@@ -181,7 +181,7 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command("unlock")
     @commands.guild_only()
-    @commands.has_role("Mod")
+    @commands.has_any_role("Executive Producers", "Assistant Producers")
     async def channel_unlock(self, ctx):
         """Reverts changes made through $sleep"""
         role = discord.utils.get(ctx.guild.roles, name="Fam")

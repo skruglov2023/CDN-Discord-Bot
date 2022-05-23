@@ -42,7 +42,7 @@ class Basic(commands.Cog):
     @commands.hybrid_command(name="ping", hidden=True)
     async def ping(self, ctx: commands.Context):
         """See how long the bot takes to respond"""
-        await ctx.send(f"Pong! {round(self.bot.latency * 1000, 1)} ms")
+        await ctx.send(f"Pong! {round(self.bot.latency * 1000, 1)} ms", ephemeral=True)
 
     @ping.error
     async def ping_error(self, ctx, error):
@@ -54,7 +54,7 @@ class Basic(commands.Cog):
         """Sends the welcome message if someone needs instructions on what they have to do"""
         role_channel = self.bot.get_channel(881007767018700860)
         await ctx.send(
-            f'Welcome, {user.display_name}, to CDN\'s Discord Server. Please go to {role_channel.mention} to tell us your '
+            f'Welcome, {user.mention}, to CDN\'s Discord Server. Please go to {role_channel.mention} to tell us your '
             f'name and what your role(s) is/are in CDN. You can request certain roles with $giveme role', ephemeral=False)
 
     @welcome.error
@@ -62,7 +62,7 @@ class Basic(commands.Cog):
         if isinstance(error, commands.BadArgument):
             await ctx.send("An unknown error has occurred")
         elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("Who do I send the instructions to again?", delete_after=10)
+            await ctx.send("Who do I send the instructions to again?", ephemeral=True)
         else:
             await ctx.send(error)
 
@@ -160,7 +160,7 @@ class Basic(commands.Cog):
         elif isinstance(error, commands.BotMissingPermissions):
             await ctx.send("I can\'t give you that role due to discord hierarchy", delete_after=15)
         elif isinstance(error, commands.MissingRole):
-            await ctx.send("Recruits can\'t ask for roles", delete_after=15)
+            await ctx.send("Recruits can\'t ask for roles", ephemeral=True)
         else:
             await ctx.send(error)
 
