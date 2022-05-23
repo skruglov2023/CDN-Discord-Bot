@@ -39,7 +39,6 @@ with open(TokenPath, 'r') as toke:
     TOKEN = almostToken
 intents = discord.Intents.default()
 intents.members = True
-intents.reactions = True
 intents.message_content = True
 
 
@@ -113,22 +112,6 @@ class Confirm(discord.ui.View):
         self.stop()
 
 
-@bot.hybrid_command()
-async def ask(ctx: commands.Context):
-    """Asks the user a question to confirm something."""
-    # We create the view and assign it to a variable so we can wait for it later.
-    view = Confirm()
-    await ctx.send('Do you want to continue?', view=view, delete_after=120)
-    # Wait for the View to stop listening for input...
-    await view.wait()
-    if view.value is None:
-        print('Timed out...')
-    elif view.value:
-        print('Confirmed...')
-    else:
-        print('Cancelled...')
-
-
 @bot.hybrid_command(name="reload", pass_context=True, hidden=True)
 @commands.has_role("CDN Bot Creator")
 async def reload_cog(ctx: commands.Context, reloadable):
@@ -139,6 +122,8 @@ async def reload_cog(ctx: commands.Context, reloadable):
     embed.add_field(name="Cog reloaded", value=reloadable)
     await ctx.send(embed=embed)
     print(f"cog reloaded: {reloadable}")
+    for cmd in bot.walk_commands():
+        print(cmd)
 
 
 @reload_cog.error
