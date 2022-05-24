@@ -42,6 +42,48 @@ intents.members = True
 intents.message_content = True
 
 
+class Dropdown(discord.ui.Select):
+    def __init__(self):
+
+        # Set the options that will be presented inside the dropdown
+        options = [
+            discord.SelectOption(label='admin', description='Reload Admin Cog'),
+            discord.SelectOption(label='basic', description='Reload Basic Cog'),
+            discord.SelectOption(label='fun', description='Reload Fun Cog'),
+            discord.SelectOption(label='automated', description='Reload Automated Cog')
+        ]
+
+        # The placeholder is what will be shown when no option is chosen
+        # The min and max values indicate we can only pick one of the three options
+        # The options parameter defines the dropdown options. We defined this above
+        super().__init__(placeholder='Choose the cog to reload...', min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        # Use the interaction object to send a response message containing
+        # the user's favourite colour or choice. The self object refers to the
+        # Select object, and the values attribute gets a list of the user's
+        # selected options. We only want the first one.
+        #await interaction.response.send_message(f'The reloaded cog is {self.values[0]}_cog', ephemeral=True)
+        #print(self.values[0])
+        await bot.reload_extension(f"cogs.{self.values[0]}_cog")
+        #print("reloaded?")
+        embed=discord.Embed(color=discord.colour.Color.blurple())
+        bot.tree.copy_global_to(guild=MY_GUILD)
+        await bot.tree.sync(guild=MY_GUILD)
+        #print("synced?")
+        embed.add_field(name="Cog reloaded", value=self.values[0])
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+        #print(f"cog reloaded: {self.values[0]}_cog")
+
+
+class DropdownView(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+
+        # Adds the dropdown to our view object.
+        self.add_item(Dropdown())
+
+
 class MyBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix='$', intents=intents, application_id=int(881243826767945738))
@@ -114,22 +156,19 @@ class Confirm(discord.ui.View):
 
 @bot.hybrid_command(name="reload", pass_context=True, hidden=True)
 @commands.has_role("CDN Bot Creator")
-async def reload_cog(ctx: commands.Context, reloadable):
+async def reload_cog(ctx: commands.Context):
 #    print(reloadable)
     """Reloads a cog after an update, instead of reloading the entire bot"""
-    await bot.reload_extension(f"cogs.{reloadable}")
-    embed = discord.Embed(color=discord.colour.Color.blurple())
-    embed.add_field(name="Cog reloaded", value=reloadable)
-    await ctx.send(embed=embed)
-    print(f"cog reloaded: {reloadable}")
-    for cmd in bot.walk_commands():
-        print(cmd)
+    view=DropdownView()
+    # Sending a message containing our view
+    await ctx.send('Pick a cog to reload', view=view, ephemeral=True)
+
 
 
 @reload_cog.error
 async def reload_cog_error(ctx, error):
     if isinstance(error, commands.MissingRole):
-        await ctx.send("You don\'t have the required role to do this", delete_after=15)
+        await ctx.send("You don\'t have the required role to do this", delete_after=15, ephemeral=True)
     else:
         await ctx.send(error)
 
@@ -145,11 +184,13 @@ async def show_join_date(interaction: discord.Interaction, member: discord.Membe
 async def report_message(interaction: discord.Interaction, message: discord.Message):
     # We're sending this response message with ephemeral=True, so only the command executor can see it
     await interaction.response.send_message(
-        f'Thanks for reporting this message by {message.author.mention} to the CDN Dictators and Franklin.', ephemeral=True
+        f'Thanks for reporting this message by {message.author.mention} to the CDN Dictators and Franklin. Your '
+        f'report is anonymous, the only information that is provided is the message that you have reported.',
+        ephemeral=True
     )
 
     # Handle report by sending it into a log channel
-    log_channel = interaction.guild.get_channel(881026004154482709)  # replace with your channel id
+    log_channel = interaction.guild.get_channel(978506865338114068)  # replace with your channel id
 
     embed = discord.Embed(title='Reported Message')
     if message.content:

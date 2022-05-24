@@ -142,7 +142,7 @@ class Basic(commands.Cog):
                 embed=discord.Embed(title=f"{message.author.display_name} requested {role.name}", description="",
                                     color=discord.Colour.blue())
                 embed.add_field(name=message.content, value="Role request", inline=True)
-                log_chan=self.bot.get_channel(881026004154482709)
+                log_chan=self.bot.get_channel(978506865338114068)
                 await log_chan.send(embed=embed)
                 await ctx.send(embed=embed)
             else:

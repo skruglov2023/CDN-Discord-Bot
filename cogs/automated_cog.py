@@ -21,7 +21,7 @@ class AutomatedStuff(commands.Cog):
         channell = self.bot.get_channel(881007767018700860)
         embed = discord.Embed(title=f"Welcome {member}",
                               description=f"Thanks for joining {member.guild.name}! \n Please go to {channell.mention} to "
-                                          f"tell us your name and what your role is in CDN (There can be multiple roles)",
+                                          f"tell us your name, grade, and what you do in CDN (if you know)",
                               color=discord.Color.green())
         embed.set_thumbnail(url=member.display_avatar)  # Set the embed's thumbnail to the member's avatar image!
         await channell.send(embed=embed)
@@ -29,7 +29,7 @@ class AutomatedStuff(commands.Cog):
         await member.create_dm()
         await member.dm_channel.send(
             f"""Hi {member.name}, welcome to the CDN Discord server! Please go to the channel in the CDN Discord Server 
-            that is called /#roles-name-change-requests and tell us what you do for CDN and what your name is""")
+            that is called /#roles-name-change-requests and tell us who you are (name and grade) and what you do/plan on doing for CDN""")
 
     @commands.Cog.listener()
     @commands.guild_only()
@@ -96,6 +96,8 @@ class AutomatedStuff(commands.Cog):
         # below is for saying "happy birthday" if someone says it
         if "happy birthday" in message.content.lower():
             await message.channel.send('Happy Birthday! 🎈🎉')
+        if "stephy" or "skruglov" or "krugie" in message.content.lower():
+            await message.channel.send("It's stephan to you!", delete_after=10)
         # below is for adding reactions to messages in 'events'
         yes = "⬆️"
         no = "⬇️"
