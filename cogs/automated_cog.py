@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
-
-from discord.ext import commands
+import pytz
+from discord.ext import commands, tasks
 import discord
+import datetime
+import pytz
 
 #lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
 lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
+
+tz = datetime.timezone(datetime.timedelta(hours=-5))
+
+lock_time = datetime.time(22, 0, tzinfo=tz)
+unlock_time = datetime.time(6, 0, tzinfo=tz)
 
 
 class AutomatedStuff(commands.Cog):
@@ -14,6 +21,42 @@ class AutomatedStuff(commands.Cog):
 
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+        self.server_lock.start()
+        self.server_unlock.start()
+
+    @tasks.loop(time=lock_time)
+    async def server_lock(self):
+        #print("lock")
+        guild = self.bot.get_guild(875158282422067230)
+        role = discord.utils.get(guild.roles, id=917447073182412830)
+        #print(role)
+        perms = guild.text_channels
+        for channel in perms:
+            if channel.category_id==875158282422067232:
+                if channel.id == 978775667871215646:
+                    print(f"{channel.name} was not locked")
+                else:
+                    #print(channel.name)
+                    sleep = channel.overwrites_for(role)
+                    sleep.send_messages = False
+                    await channel.set_permissions(target=role, overwrite=sleep)
+
+    @tasks.loop(time=unlock_time)
+    async def server_unlock(self):
+        #print("lock")
+        guild = self.bot.get_guild(875158282422067230)
+        role = discord.utils.get(guild.roles, id=917447073182412830)
+        #print(role)
+        perms = guild.text_channels
+        for channel in perms:
+            if channel.category_id==875158282422067232:
+                if channel.id == 978775667871215646:
+                    print(f"{channel.name} was already unlocked")
+                else:
+                    #print(channel.name)
+                    sleep = channel.overwrites_for(role)
+                    sleep.send_messages = None
+                    await channel.set_permissions(target=role, overwrite=sleep)
 
     @commands.Cog.listener()
     @commands.guild_only()
@@ -93,11 +136,17 @@ class AutomatedStuff(commands.Cog):
         if message.author.bot:
             return
         stephan = self.bot.get_user(675726066018680861)
+        #print(message.channel.id)
+        #print(message.content.lower())
+        #if "lock" in message.content.lower():
+        #    await self.server_unlock()
+            #print("unlocked?")
         # below is for saying "happy birthday" if someone says it
         if "happy birthday" in message.content.lower():
             await message.channel.send('Happy Birthday! 🎈🎉')
-        if "stephy" or "skruglov" or "krugie" in message.content.lower():
+        if "stephy" in message.content.lower() or "skruglov" in message.content.lower() or "krugie" in message.content.lower():
             await message.channel.send("It's stephan to you!", delete_after=10)
+            await message.delete()
         # below is for adding reactions to messages in 'events'
         yes = "⬆️"
         no = "⬇️"
@@ -124,7 +173,7 @@ class AutomatedStuff(commands.Cog):
         message_id = await channel.fetch_message(reaction.message_id)
         emoji = self.bot.get_emoji(eid)
         userid = gid.get_member(reaction.user_id)
-        role = discord.utils.get(gid.roles, name="Recruit")
+        recruit = discord.utils.get(gid.roles, name="Recruit")
         #print(f"{eid}, {ename}")
         #print(f"reaction channel: {channel}, bot testing channel: {bot_testing}")
 #        if channel==bot_testing:
@@ -132,9 +181,8 @@ class AutomatedStuff(commands.Cog):
 #            print(f"removed reaction {eid}, {ename}")
 #            await bot_testing.send(f"{eid}/{ename} reaction from {userid.display_name} was removed due to lack of roles")
         if reaction.message_id == role_message:
-            if role in userid.roles:
-                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet, "
-                                       f"including the {role} role that you just requested", delete_after=60, ephemeral=True)
+            if recruit in userid.roles:
+                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", delete_after=60)
                 await message_id.remove_reaction(emoji, userid)
                 return
             if eid == 900172591141097602:
@@ -188,7 +236,7 @@ class AutomatedStuff(commands.Cog):
         role = discord.utils.get(gid.roles, name="Recruit")
         if reaction.message_id == role_message:
             if role in userid.roles:
-                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", ephemeral=True)
+                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet")
                 return
             if eid == 900172591141097602:
                 await channel.send("How dare you remove Stephan", tts=True, delete_after=60)

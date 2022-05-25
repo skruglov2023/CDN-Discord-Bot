@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord import app_commands
 
 import logging
-#logging.basicConfig(level=logging.ERROR)
+#logging.basicConfig(level=logging.DEBUG)
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)
@@ -162,7 +162,6 @@ async def reload_cog(ctx: commands.Context):
     view=DropdownView()
     # Sending a message containing our view
     await ctx.send('Pick a cog to reload', view=view, ephemeral=True)
-
 
 
 @reload_cog.error

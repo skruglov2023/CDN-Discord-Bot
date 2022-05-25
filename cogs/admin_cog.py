@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import asyncio
+import datetime
 
 from discord.ext import commands
 import discord
@@ -194,6 +195,25 @@ class Admin(commands.Cog):
         perms.send_messages=True
         await ctx.channel.set_permissions(role, overwrite=perms)
         await ctx.send("Enjoy the rest of your day", delete_after=60)
+
+    @commands.hybrid_command("timeout")
+    @commands.guild_only()
+    @commands.has_any_role("Executive Producers", "Assistant Producers")
+    async def timeout(self, ctx: commands.Context, target: discord.Member, timeout: float, reason):
+        """Times out user and logs it"""
+        log_chan=self.bot.get_channel(978506865338114068)
+        #print(timeout)
+        #print(reason)
+        timeout_embed=discord.Embed(title="Time out user", color=discord.Color.red())
+        timeout_embed.add_field(name="User timed out", value=f"{target.display_name} | {target.mention}", inline=False)
+        timeout_embed.add_field(name="Reason", value=reason, inline=False)
+        timeout_embed.add_field(name="Time", value=f"Starting at {datetime.datetime.now().astimezone()}, for {timeout} minutes", inline=False)
+        await target.timeout(datetime.datetime.now().astimezone()+datetime.timedelta(minutes=timeout), reason=reason)
+        await log_chan.send(embed=timeout_embed)
+        await ctx.send(f"User {target.mention} timed out for {timeout} minutes")
+
+#    if datetime.time.hour==22 and datetime.date.weekday() is not 4 or datetime.date.weekday() is not 5:
+#        server_lock()
 
 
 async def setup(bot):
