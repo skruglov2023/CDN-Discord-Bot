@@ -211,9 +211,18 @@ class Admin(commands.Cog):
         await target.timeout(datetime.datetime.now().astimezone()+datetime.timedelta(minutes=timeout), reason=reason)
         await log_chan.send(embed=timeout_embed)
         await ctx.send(f"User {target.mention} timed out for {timeout} minutes")
-
+    #print(datetime.datetime.strftime('%Y-%m-%d %H:%M:%S'))
 #    if datetime.time.hour==22 and datetime.date.weekday() is not 4 or datetime.date.weekday() is not 5:
 #        server_lock()
+
+    @commands.hybrid_command("users")
+    @commands.guild_only()
+    async def show_all_with_role(self, ctx: commands.Context, role: discord.Role):
+        """Shows all users with role"""
+        members='\n - '.join([user.mention for user in role.members])
+        withrole=discord.Embed(title=f"Users with role {role.name}", color=discord.Color.brand_green())
+        withrole.add_field(name=role.name, value=f"- {members}", inline=False)
+        await ctx.send(embed=withrole, ephemeral=True)
 
 
 async def setup(bot):
