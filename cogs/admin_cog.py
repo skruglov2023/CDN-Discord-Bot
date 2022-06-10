@@ -207,11 +207,13 @@ class Admin(commands.Cog):
         timeout_embed=discord.Embed(title="Time out user", color=discord.Color.red())
         timeout_embed.add_field(name="User timed out", value=f"{target.display_name} | {target.mention}", inline=False)
         timeout_embed.add_field(name="Reason", value=reason, inline=False)
-        timeout_embed.add_field(name="Time", value=f"Starting at {datetime.datetime.now().astimezone()}, for {timeout} minutes", inline=False)
+        timeout_embed.add_field(name="Time", value=f"Starting at {datetime.datetime.strftime(datetime.datetime.now().astimezone(),'%Y-%m-%d %H:%M:%S')}, for {timeout} minutes", inline=False)
         await target.timeout(datetime.datetime.now().astimezone()+datetime.timedelta(minutes=timeout), reason=reason)
         await log_chan.send(embed=timeout_embed)
         await ctx.send(f"User {target.mention} timed out for {timeout} minutes")
     #print(datetime.datetime.strftime('%Y-%m-%d %H:%M:%S'))
+#    print(datetime.datetime.strftime(datetime.datetime.now().astimezone(), '%Y-%m-%d %H:%M:%S'))
+
 #    if datetime.time.hour==22 and datetime.date.weekday() is not 4 or datetime.date.weekday() is not 5:
 #        server_lock()
 

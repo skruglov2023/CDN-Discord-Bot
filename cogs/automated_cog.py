@@ -101,7 +101,7 @@ class AutomatedStuff(commands.Cog):
                     last_id.write(str(lastDeleteId))
         embed = discord.Embed(title=f"{author}'s message in {this_channel} was deleted by {deleter}", description="",
                               color=discord.Colour.red())
-        embed.add_field(name=content, value="Deleted Message", inline=True)
+        embed.add_field(name="Deleted message:", value=content, inline=True)
         channel = self.bot.get_channel(881026004154482709)
         await channel.send(embed=embed)
 
@@ -115,20 +115,10 @@ class AutomatedStuff(commands.Cog):
             embed = discord.Embed(
                 title=f"{message_before.author.display_name} edited a message in {message_before.channel}",
                 description="", color=discord.Color.gold())
-            embed.add_field(name=message_before.content, value="Before Edit", inline=True)
-            embed.add_field(name=message_after.content, value="After edit", inline=True)
+            embed.add_field(name="Before edit:", value=message_before.content, inline=True)
+            embed.add_field(name="After edit:", value=message_after.content, inline=True)
             channel = self.bot.get_channel(881026004154482709)
             await channel.send(embed=embed)
-
-    @commands.Cog.listener()
-    @commands.guild_only()
-    async def on_voice_state_update(self, member, before, after):
-        """Adds/Removes Voice role when you join/leave a call"""
-        role = discord.utils.get(member.guild.roles, name="Voice")
-        if not before.channel and after.channel:
-            await member.add_roles(role)
-        elif before.channel and not after.channel:
-            await member.remove_roles(role)
 
     @commands.Cog.listener()
     @commands.guild_only()
@@ -144,9 +134,12 @@ class AutomatedStuff(commands.Cog):
         # below is for saying "happy birthday" if someone says it
         if "happy birthday" in message.content.lower():
             await message.channel.send('Happy Birthday! 🎈🎉')
-        if "stephy" in message.content.lower() or "skruglov" in message.content.lower() or "krugie" in message.content.lower():
-            await message.channel.send("It's stephan to you!", delete_after=10)
-            await message.delete()
+        if message.author.id is not stephan.id:
+            if "stephy" in message.content.lower() or "skruglov" in message.content.lower() or "krugie" in message.content.lower():
+                await message.channel.send(f"It's stephan to you {message.author.mention}!", delete_after=10)
+                await message.delete()
+            print(message.author.id)
+            print(stephan.id)
         # below is for adding reactions to messages in 'events'
         yes = "⬆️"
         no = "⬇️"
