@@ -4,10 +4,10 @@ from discord.ext import commands
 import discord
 import gdown
 
-#path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
-#path0='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
-#path1='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
-#path2='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
+# path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
+# path0='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
+# path1='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
+# path2='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
 
 
 path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
@@ -46,8 +46,8 @@ class Basic(commands.Cog):
 
     with open(path, 'r') as role_file:
         global av_roles  # You want to be able to access this throughout the code
-        all_roles = role_file.read()
-        av_roles = all_roles.split()
+        all_roles=role_file.read()
+        av_roles=all_roles.split()
 
     @commands.hybrid_command(name="ping", hidden=True)
     async def ping(self, ctx: commands.Context):
@@ -62,7 +62,7 @@ class Basic(commands.Cog):
     @commands.guild_only()
     async def welcome(self, ctx: commands.Context, user: discord.User):
         """Sends the welcome message if someone needs instructions on what they have to do"""
-        role_channel = self.bot.get_channel(881007767018700860)
+        role_channel=self.bot.get_channel(881007767018700860)
         await ctx.send(
             f'Welcome, {user.mention}, to CDN\'s Discord Server. Please go to {role_channel.mention} to tell us your '
             f'name and what your role(s) is/are in CDN. You can request certain roles with $giveme role',
@@ -136,28 +136,28 @@ class Basic(commands.Cog):
     @commands.has_role("Fam")
     async def giveme(self, ctx: commands.Context, *, role: discord.Role):
         """Gives a role to the person asking"""
-        role_change = self.bot.get_channel(881007767018700860)
-        message = ctx.message
+        role_change=self.bot.get_channel(881007767018700860)
+        message=ctx.message
         if str(role.id) not in av_roles:
-            #print("will not proceed to message")
-            #print(f"Wanted {role}")
-            #print(f"Roles available: {av_roles}")
+            # print("will not proceed to message")
+            # print(f"Wanted {role}")
+            # print(f"Roles available: {av_roles}")
             await ctx.send("You can't request this role", ephemeral=True)
             return
-        elif message.channel == role_change:
-            view = Confirm()
+        elif message.channel==role_change:
+            view=Confirm()
             await ctx.send('Are you sure you want this role?', view=view, ephemeral=True)
             await view.wait()
-            #print(role.id)
+            # print(role.id)
             if view.value is None:
                 return
             elif view.value:
                 await message.author.add_roles(role)
-                embed = discord.Embed(title=f"{message.author.display_name} requested {role.name}",
-                                      color=discord.Colour.blue())
-                #embed.add_field(name=role.name, value="Role request", inline=True)
-                log_chan = self.bot.get_channel(978506865338114068)
-                #print("role given")
+                embed=discord.Embed(title=f"{message.author.display_name} requested {role.name}",
+                                    color=discord.Colour.blue())
+                # embed.add_field(name=role.name, value="Role request", inline=True)
+                log_chan=self.bot.get_channel(978506865338114068)
+                # print("role given")
                 await log_chan.send(embed=embed)
                 await ctx.send(embed=embed)
             else:
@@ -176,7 +176,7 @@ class Basic(commands.Cog):
         elif isinstance(error, commands.MissingRole):
             await ctx.send("Recruits can\'t ask for roles", ephemeral=True)
         else:
-            #await ctx.send("Some error has occurred, check log for more info")
+            # await ctx.send("Some error has occurred, check log for more info")
             print(error)
 
     @commands.hybrid_command(name="showroles", aliases=["roles", "giveme roles", "givethem roles", "give roles"])
@@ -194,6 +194,24 @@ class Basic(commands.Cog):
                  '\nKeep in mind that none of these roles give anything special \n',
             value=f"- {help_string}", inline=True)
         await ctx.send(embed=embed, ephemeral=True)
+
+    @commands.hybrid_command(name="vote", aliases=["poll"])
+    @commands.guild_only()
+    @commands.has_role("Fam")
+    async def poll(self, ctx: commands.Context, options=None):
+        """Adds vote emojis to a message"""
+        if options is None:
+            await ctx.message.add_reaction('<:christianThumbsUp:887887292134473738>')
+            await ctx.message.add_reaction('<:christianThumbsDown:887884542256500766>')
+        elif options>2:
+            for option in options:
+                numbers = {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9,
+                         "keycap_ten":10}
+                async for number in numbers:
+                    if number>options:
+                        break
+                    else:
+                        await ctx.message.add_reaction(number)
 
 
 async def setup(bot):
