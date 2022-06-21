@@ -9,7 +9,6 @@ import gdown
 # path1='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
 # path2='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
 
-
 path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
 path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
 path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
@@ -195,23 +194,22 @@ class Basic(commands.Cog):
             value=f"- {help_string}", inline=True)
         await ctx.send(embed=embed, ephemeral=True)
 
-    @commands.hybrid_command(name="vote", aliases=["poll"])
+    @commands.command(name="vote", aliases=["poll"])
     @commands.guild_only()
     @commands.has_role("Fam")
-    async def poll(self, ctx: commands.Context, options=None):
+    async def poll(self, ctx: commands.Context, options: int =None):
         """Adds vote emojis to a message"""
         if options is None:
             await ctx.message.add_reaction('<:christianThumbsUp:887887292134473738>')
             await ctx.message.add_reaction('<:christianThumbsDown:887884542256500766>')
-        elif options>2:
-            for option in options:
-                numbers = {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9,
-                         "keycap_ten":10}
-                async for number in numbers:
-                    if number>options:
-                        break
-                    else:
-                        await ctx.message.add_reaction(number)
+        elif options > int(2):
+            numbers = {"1️⃣": 1, "2️⃣": 2, "3️⃣": 3, "4️⃣": 4, "5️⃣": 5, "6️⃣": 6, "7️⃣": 7, "8️⃣": 8, "9️⃣": 9, "🔟": 10}
+            for number, value in numbers.items():
+                #print(f"number: {number}, value: {value}")
+                if value > options:
+                    break
+                else:
+                    await ctx.message.add_reaction(number)
 
 
 async def setup(bot):
