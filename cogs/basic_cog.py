@@ -4,10 +4,11 @@ from discord.ext import commands
 import discord
 import gdown
 
-# path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
-# path0='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
-# path1='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
-# path2='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
+#path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
+#path0='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
+#path1='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
+#path2='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
+
 
 path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
 path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
@@ -182,17 +183,10 @@ class Basic(commands.Cog):
     @commands.guild_only()
     @commands.has_role("Fam")
     async def showroles(self, ctx):
-        """Lists all available roles in the server"""
-        roles='\n - '.join([role.name for role in ctx.guild.roles][1:25])
-        #            print(f'Roles:\n - {roles}')
-        help_string=roles
-        embed=discord.Embed(title="Available CDN Discord Roles", description="",
-                            color=discord.Colour.from_rgb(234, 170, 0))
-        embed.add_field(
-            name='Use $giveme/$give (or slash command), if you choose an unavailable role, the bot will tell you '
-                 '\nKeep in mind that none of these roles give anything special \n',
-            value=f"- {help_string}", inline=True)
-        await ctx.send(embed=embed, ephemeral=True)
+        """lists roles that can be given"""
+        role_names=[discord.utils.get(ctx.guild.roles, id=int(av_role)).mention for av_role in av_roles]
+        roles_string="\n".join(role_names)
+        await ctx.send(f"Available Roles:\n{roles_string}", ephemeral=True)
 
     @commands.command(name="vote", aliases=["poll"])
     @commands.guild_only()

@@ -5,6 +5,7 @@ import typing
 
 from discord.ext import commands
 import discord
+
 #path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
 path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
 
@@ -35,17 +36,18 @@ class Admin(commands.Cog):
     """Commands available only to Producers or other admins"""
 
     def __init__(self, bot: commands.Bot) -> None:
-        self.bot = bot
+        self.bot=bot
 
     def is_me_or_hannah():  # alejandro trolling moment
         def predicate(ctx):
-            return ctx.message.author.id == 675726066018680861 or ctx.message.author.id == 361537594112081951
+            return ctx.message.author.id==675726066018680861 or ctx.message.author.id==361537594112081951
+
         return commands.check(predicate)
 
     with open(path, 'r') as role_file:
         global av_roles  # You want to be able to access this throughout the code
-        all_roles = role_file.read()
-        av_roles = all_roles.split()
+        all_roles=role_file.read()
+        av_roles=all_roles.split()
 
     @commands.hybrid_command(name="status", pass_context=True, hidden=True)
     @is_me_or_hannah()
@@ -71,14 +73,15 @@ class Admin(commands.Cog):
     @commands.hybrid_command(name="give", pass_context=True, aliases=["givethemrole", "givethem"])
     @commands.guild_only()
     @commands.has_any_role("Executive Producers", "Assistant Producers")
-    async def give(self, ctx: commands.Context, user: discord.Member, role: discord.Role, reason: typing.Optional[str] = None):
+    async def give(self, ctx: commands.Context, user: discord.Member, role: discord.Role,
+                   reason: typing.Optional[str] = None):
         """Gives a role to someone"""
         # stephan = self.bot.get_user(675726066018680861)
-        message = ctx.message
+        message=ctx.message
         if str(role.id) not in av_roles:
-            #print("will not proceed to message")
-            #print(f"Wanted {role}")
-            #print(f"Roles available: {av_roles}")
+            # print("will not proceed to message")
+            # print(f"Wanted {role}")
+            # print(f"Roles available: {av_roles}")
             await ctx.send("You can't give this role", ephemeral=True)
             return
         view=Confirm()
@@ -88,13 +91,13 @@ class Admin(commands.Cog):
             return
         elif view.value:
             await user.add_roles(role)
-            embed = discord.Embed(title=f"{message.author.display_name} gave {role.name} to {user.display_name}",
-                                  color=discord.Colour.dark_blue())
+            embed=discord.Embed(title=f"{message.author.display_name} gave {role.name} to {user.display_name}",
+                                color=discord.Colour.dark_blue())
             if reason is not None:
                 embed.add_field(name=role.name, value=f"Role requested, reason being: {reason}", inline=True)
-            log_chan = self.bot.get_channel(978506865338114068)
+            log_chan=self.bot.get_channel(978506865338114068)
             await log_chan.send(embed=embed)
-            #await ctx.reply(f"{role.name} given to {user.display_name}", mention_author=False)
+            # await ctx.reply(f"{role.name} given to {user.display_name}", mention_author=False)
             # await stephan.send(f"{role.name} given to {user.display_name} by {ctx.author.display_name}")
         else:
             await ctx.send("Role not given", ephemeral=True)
@@ -117,7 +120,7 @@ class Admin(commands.Cog):
     async def new_role(self, ctx: commands.Context, role_name, reason: typing.Optional[str] = None):
         """Creates a role"""
         # stephan = self.bot.get_user(675726066018680861)
-        view = Confirm()
+        view=Confirm()
         await ctx.send('Are you sure you want to create this role?', view=view, ephemeral=True, delete_after=30)
         await view.wait()
         if view.value is None:
@@ -214,20 +217,23 @@ class Admin(commands.Cog):
     async def timeout(self, ctx: commands.Context, target: discord.Member, timeout: float, reason):
         """Times out user and logs it"""
         log_chan=self.bot.get_channel(978506865338114068)
-        #print(timeout)
-        #print(reason)
+        # print(timeout)
+        # print(reason)
         timeout_embed=discord.Embed(title="Time out user", color=discord.Color.red())
         timeout_embed.add_field(name="User timed out", value=f"{target.display_name} | {target.mention}", inline=False)
         timeout_embed.add_field(name="Reason", value=reason, inline=False)
-        timeout_embed.add_field(name="Time", value=f"Starting at {datetime.datetime.strftime(datetime.datetime.now().astimezone(),'%Y-%m-%d %H:%M:%S')}, for {timeout} minutes", inline=False)
+        timeout_embed.add_field(name="Time",
+                                value=f"Starting at {datetime.datetime.strftime(datetime.datetime.now().astimezone(), '%Y-%m-%d %H:%M:%S')}, for {timeout} minutes",
+                                inline=False)
         await target.timeout(datetime.datetime.now().astimezone()+datetime.timedelta(minutes=timeout), reason=reason)
         await log_chan.send(embed=timeout_embed)
         await ctx.send(f"User {target.mention} timed out for {timeout} minutes")
-    #print(datetime.datetime.strftime('%Y-%m-%d %H:%M:%S'))
-#    print(datetime.datetime.strftime(datetime.datetime.now().astimezone(), '%Y-%m-%d %H:%M:%S'))
 
-#    if datetime.time.hour==22 and datetime.date.weekday() is not 4 or datetime.date.weekday() is not 5:
-#        server_lock()
+    # print(datetime.datetime.strftime('%Y-%m-%d %H:%M:%S'))
+    #    print(datetime.datetime.strftime(datetime.datetime.now().astimezone(), '%Y-%m-%d %H:%M:%S'))
+
+    #    if datetime.time.hour==22 and datetime.date.weekday() is not 4 or datetime.date.weekday() is not 5:
+    #        server_lock()
 
     @commands.hybrid_command("users")
     @commands.guild_only()
