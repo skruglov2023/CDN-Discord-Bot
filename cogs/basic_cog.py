@@ -197,9 +197,11 @@ class Basic(commands.Cog):
     @commands.command(name="vote", aliases=["poll"])
     @commands.guild_only()
     @commands.has_role("Fam")
-    async def poll(self, ctx: commands.Context, options: int =None):
+    async def poll(self, ctx: commands.Context, options=None):
         """Adds vote emojis to a message"""
-        if options is None:
+        if not isinstance(options, int):
+           options=2
+        if options is int(2) or options is None:
             await ctx.message.add_reaction('<:christianThumbsUp:887887292134473738>')
             await ctx.message.add_reaction('<:christianThumbsDown:887884542256500766>')
         elif options > int(2):

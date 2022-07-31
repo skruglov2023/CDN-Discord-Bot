@@ -34,7 +34,7 @@ class AutomatedStuff(commands.Cog):
         for channel in perms:
             if channel.category_id==875158282422067232:
                 if channel.id == 978775667871215646:
-                    print(f"{channel.name} was not locked")
+                    print("line 38 ran")
                 else:
                     #print(channel.name)
                     sleep = channel.overwrites_for(role)
@@ -51,7 +51,7 @@ class AutomatedStuff(commands.Cog):
         for channel in perms:
             if channel.category_id==875158282422067232:
                 if channel.id == 978775667871215646:
-                    print(f"{channel.name} was already unlocked")
+                    print("line 40-something ran")
                 else:
                     #print(channel.name)
                     sleep = channel.overwrites_for(role)
