@@ -183,7 +183,7 @@ class Basic(commands.Cog):
     @commands.guild_only()
     @commands.has_role("Fam")
     async def showroles(self, ctx):
-        """lists roles that can be given"""
+        """Lists roles that can be given"""
         role_names=[discord.utils.get(ctx.guild.roles, id=int(av_role)).mention for av_role in av_roles]
         roles_string="\n".join(role_names)
         await ctx.send(f"Available Roles:\n{roles_string}", ephemeral=True)
@@ -193,19 +193,15 @@ class Basic(commands.Cog):
     @commands.has_role("Fam")
     async def poll(self, ctx: commands.Context, options=None):
         """Adds vote emojis to a message"""
-        if not isinstance(options, int):
-           options=2
-        if options is int(2) or options is None:
+        if options is not None:
+            options=int(options)
+        if options==2 or options is None or not isinstance(options, int):
             await ctx.message.add_reaction('<:christianThumbsUp:887887292134473738>')
             await ctx.message.add_reaction('<:christianThumbsDown:887884542256500766>')
-        elif options > int(2):
-            numbers = {"1️⃣": 1, "2️⃣": 2, "3️⃣": 3, "4️⃣": 4, "5️⃣": 5, "6️⃣": 6, "7️⃣": 7, "8️⃣": 8, "9️⃣": 9, "🔟": 10}
-            for number, value in numbers.items():
-                #print(f"number: {number}, value: {value}")
-                if value > options:
-                    break
-                else:
-                    await ctx.message.add_reaction(number)
+        else:
+            numbers=["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+            for number in numbers[:options]:
+                await ctx.message.add_reaction(number)
 
 
 async def setup(bot):
