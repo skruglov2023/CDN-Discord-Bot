@@ -6,8 +6,8 @@ import typing
 from discord.ext import commands
 import discord
 
-#path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
-path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
+path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
+#path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
 
 
 class Confirm(discord.ui.View):
@@ -67,6 +67,7 @@ class Admin(commands.Cog):
         elif isinstance(error, commands.CheckFailure):
             await ctx.send("You\'re testing my patience now, stop trying to change the status on the bot", tts=True,
                            delete_after=60)
+            await ctx.send("why do you keep doing this to me", ephemeral=True)
         else:
             await ctx.send(error)
 
