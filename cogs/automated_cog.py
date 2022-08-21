@@ -135,7 +135,7 @@ class AutomatedStuff(commands.Cog):
         if "happy birthday" in message.content.lower():
             await message.channel.send('Happy Birthday! 🎈🎉')
         if message.author.id is not stephan.id:
-            if "stephy" in message.content.lower() or "skruglov" in message.content.lower() or "krugie" in message.content.lower():
+            if "stephy" in message.content.lower() or "skruglov" in message.content.lower() or "krugie" in message.content.lower() or "screw" in message.content.lower() or "skrewglov" in message.content.lower() or "scruglov" in message.content.lower():
                 await message.channel.send(f"It's stephan to you {message.author.mention}!", delete_after=10)
                 await message.delete()
             print(message.author.id)
@@ -175,7 +175,8 @@ class AutomatedStuff(commands.Cog):
 #            await bot_testing.send(f"{eid}/{ename} reaction from {userid.display_name} was removed due to lack of roles")
         if reaction.message_id == role_message:
             if recruit in userid.roles:
-                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", delete_after=60)
+                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet", delete_after=10)
+                print(f"{userid.display_name} tried to get role attached to {ename}")
                 await message_id.remove_reaction(emoji, userid)
                 return
             if eid == 900172591141097602:
@@ -229,7 +230,7 @@ class AutomatedStuff(commands.Cog):
         role = discord.utils.get(gid.roles, name="Recruit")
         if reaction.message_id == role_message:
             if role in userid.roles:
-                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet")
+                print(f"Reaction removed, {userid} is a recruit")
                 return
             if eid == 900172591141097602:
                 await channel.send("How dare you remove Stephan", tts=True, delete_after=60)
