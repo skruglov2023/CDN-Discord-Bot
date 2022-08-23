@@ -17,14 +17,12 @@ logger.addHandler(handler)
 path0 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\gsheetEvents.py'
 path1 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEventsCleaner.py'
 path2 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\CDNEvents.txt'
-path3 = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\blocked_words.txt'
 TokenPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_token'
 GuildPath = 'C:\\Users\\stepan\\PycharmProjects\\CDN_guild'
 # linux paths
 #path0='/home/pi/Desktop/scripts/CDN-Discord-Bot/gsheetEvents.py'
 #path1='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEventsCleaner.py'
 #path2='/home/pi/Desktop/scripts/CDN-Discord-Bot/CDNEvents.txt'
-#path3='/home/pi/Desktop/scripts/CDN-Discord-Bot/blocked_words.txt'
 #TokenPath = '/home/pi/Desktop/scripts/CDN_token'
 #GuildPath='/home/pi/Desktop/scripts/CDN_guild'
 
@@ -104,12 +102,6 @@ class MyBot(commands.Bot):
 
 bot = commands.Bot(command_prefix="$", intents=intents)
 bot = MyBot()
-
-
-with open(path3, 'r') as f:
-    global badwords  # You want to be able to access this throughout the code
-    words = f.read()
-    badwords = words.split()
 
 
 @bot.event
