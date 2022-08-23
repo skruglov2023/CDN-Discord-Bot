@@ -8,11 +8,13 @@ import discord
 import datetime
 import emoji
 
+stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
+#stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
+
 lastId='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
 # lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
-
 tz=datetime.timezone(datetime.timedelta(hours=-5))
 
 lock_time=datetime.time(22, 0, tzinfo=tz)
@@ -26,6 +28,11 @@ class AutomatedStuff(commands.Cog):
         self.bot=bot
         self.server_lock.start()
         self.server_unlock.start()
+
+    with open(stephanName, 'r') as f:
+        global notStephan_sName  # You want to be able to access this throughout the code
+        words=f.read()
+        notStephan_sName=words.split()
 
     @tasks.loop(time=lock_time)
     async def server_lock(self):
@@ -133,11 +140,12 @@ class AutomatedStuff(commands.Cog):
         if "happy birthday" in message.content.lower():
             await message.channel.send('Happy Birthday! 🎈🎉')
         if message.author.id is not stephan.id:
-            if "stephy" in message.content.lower() or "skruglov" in message.content.lower() or "krugie" in message.content.lower() or "screw" in message.content.lower() or "skrewglov" in message.content.lower() or "scruglov" in message.content.lower():
-                await message.channel.send(f"It's stephan to you {message.author.mention}!", delete_after=10)
-                await message.delete()
-            print(message.author.id)
-            print(stephan.id)
+            msg=message.content
+            for word in notStephan_sName:
+                if word in msg:
+                    await message.delete()
+                    await message.channel.send(f"It's stephan to you {message.author.mention}!", delete_after=10)
+
         # below is for adding reactions to messages in 'events'
         yes="⬆️"
         no="⬇️"
