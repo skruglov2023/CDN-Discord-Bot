@@ -8,11 +8,11 @@ import discord
 import datetime
 import emoji
 
-stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
-#stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
+#stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
+stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
 
-lastId='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
-# lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
+#lastId='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
+lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
 tz=datetime.timezone(datetime.timedelta(hours=-5))
@@ -28,11 +28,14 @@ class AutomatedStuff(commands.Cog):
         self.bot=bot
         self.server_lock.start()
         self.server_unlock.start()
+        self.stephan_sNameFilter.start()
 
-    with open(stephanName, 'r') as f:
-        global notStephan_sName  # You want to be able to access this throughout the code
-        words=f.read()
-        notStephan_sName=words.split()
+    @tasks.loop(minutes=30)
+    async def stephan_sNameFilter(self):
+        with open(stephanName, 'r') as f:
+            global notStephan_sName  # You want to be able to access this throughout the code
+            words=f.read()
+            notStephan_sName=words.split()
 
     @tasks.loop(time=lock_time)
     async def server_lock(self):
@@ -136,12 +139,18 @@ class AutomatedStuff(commands.Cog):
         if message.author.bot:
             return
         stephan=self.bot.get_user(675726066018680861)
+        aj=self.bot.get_user(332989243339177984)
         # below is for saying "happy birthday" if someone says it
         if "happy birthday" in message.content.lower():
             await message.channel.send('Happy Birthday! 🎈🎉')
         if message.author.id is not stephan.id:
-            msg=message.content
+            msg=message.content.lower()
+            if "soufflé" in msg and message.author.id is aj.id:
+                await message.delete()
+                await message.channel.send(f"I\'m getting real tired of filtering your variations for my name, {aj.mention}")
+                return
             for word in notStephan_sName:
+                #print(f"{word}, {msg}")
                 if word in msg:
                     await message.delete()
                     await message.channel.send(f"It's stephan to you {message.author.mention}!", delete_after=10)
