@@ -6,8 +6,10 @@ import typing
 from discord.ext import commands
 import discord
 
-path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
-#path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
+#path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
+#stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
+path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
+stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
 
 
 class Confirm(discord.ui.View):
@@ -244,6 +246,25 @@ class Admin(commands.Cog):
         withrole=discord.Embed(title=f"Users with role {role.name}", color=discord.Color.brand_green())
         withrole.add_field(name=role.name, value=f"- {members}", inline=False)
         await ctx.send(embed=withrole, ephemeral=True)
+
+    @commands.hybrid_command("newvariant")
+    @commands.guild_only()
+    async def not_my_name(self, ctx: commands.Context, word: str):
+        """Adds a variant of Stephan's name to the blacklist"""
+        #print(word)
+        with open(stephanName, 'a') as f:
+            f.write(f" {word}")
+            f.close()
+        await ctx.send(f"`{word}` added to the list, use /showlist to see the list of blocked words", ephemeral=True)
+        with open(stephanName, 'r')as f:
+            print(f.read())
+
+    @commands.hybrid_command("showlist")
+    @commands.guild_only()
+    async def show_not_stephan_name_list(self, ctx: commands.Context):
+        with open(stephanName, 'r')as f:
+            current_list=f.read()
+        await ctx.reply(f"The current list of words includes:\n{current_list}", ephemeral=True)
 
 
 async def setup(bot):

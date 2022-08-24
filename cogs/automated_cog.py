@@ -8,11 +8,10 @@ import discord
 import datetime
 import emoji
 
+#path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
 #stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
+path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
 stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
-
-#lastId='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
-lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
 tz=datetime.timezone(datetime.timedelta(hours=-5))
