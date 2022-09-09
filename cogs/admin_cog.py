@@ -248,6 +248,7 @@ class Admin(commands.Cog):
         await ctx.send(embed=withrole, ephemeral=True)
 
     @commands.hybrid_command("newvariant")
+    @commands.has_role("CDN Bot Creator")
     @commands.guild_only()
     async def not_my_name(self, ctx: commands.Context, word: str):
         """Adds a variant of Stephan's name to the blacklist"""
@@ -256,12 +257,13 @@ class Admin(commands.Cog):
             f.write(f" {word}")
             f.close()
         await ctx.send(f"`{word}` added to the list, use /showlist to see the list of blocked words", ephemeral=True)
-        with open(stephanName, 'r')as f:
-            print(f.read())
+        #with open(stephanName, 'r')as f:
+        #    print(f.read())
 
     @commands.hybrid_command("showlist")
     @commands.guild_only()
     async def show_not_stephan_name_list(self, ctx: commands.Context):
+        """Shows the current list of blocked words"""
         with open(stephanName, 'r')as f:
             current_list=f.read()
         await ctx.reply(f"The current list of words includes:\n{current_list}", ephemeral=True)

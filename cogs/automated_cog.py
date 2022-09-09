@@ -10,8 +10,10 @@ import emoji
 
 #path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
 #stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
+#lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
 path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
 stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
+lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
 tz=datetime.timezone(datetime.timedelta(hours=-5))
@@ -182,7 +184,7 @@ class AutomatedStuff(commands.Cog):
         # print(message.author.roles)
         #print(f"length of message content: {len(clean_string)}")
 
-        if (len(clean_string)<21 and len(custom_emojis)>1) or (len(list_emoji)>0 and len(clean_string)<1):
+        if (len(clean_string)<21 and len(custom_emojis)>0) or (len(list_emoji)>0 and len(clean_string)<1):
             role1=discord.utils.get(message.guild.roles, name="Executive Producers")
             role2=discord.utils.get(message.guild.roles, name="Assistant Producers")
             if role1 in message.author.roles or role2 in message.author.roles:
@@ -194,7 +196,7 @@ class AutomatedStuff(commands.Cog):
                 return
             await message.channel.send("Please don\'t respond here, I can\'t do anything with the message",
                                        delete_after=10)
-            await stephan.send(message.content, delete_after=3600)
+            await stephan.send(message.content, delete_after=43200)
 
     @commands.Cog.listener()
     @commands.guild_only()
@@ -245,7 +247,7 @@ class AutomatedStuff(commands.Cog):
                 role=discord.utils.get(gid.roles, name="Editor")
                 await userid.add_roles(role)
             if ename=="✍️":
-                role=discord.utils.get(gid.roles, name="Reporter")
+                role=discord.utils.get(gid.roles, name="Script Writer")
                 await userid.add_roles(role)
             if ename=="📹" or ename=="📷":
                 role=discord.utils.get(gid.roles, name="Cameras")
@@ -298,7 +300,7 @@ class AutomatedStuff(commands.Cog):
                 role=discord.utils.get(gid.roles, name="Editor")
                 await userid.remove_roles(role)
             if ename=="✍️":
-                role=discord.utils.get(gid.roles, name="Reporter")
+                role=discord.utils.get(gid.roles, name="Script Writer")
                 await userid.remove_roles(role)
             if ename=="📹" or ename=="📷":
                 role=discord.utils.get(gid.roles, name="Cameras")
