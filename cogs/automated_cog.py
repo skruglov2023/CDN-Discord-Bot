@@ -11,9 +11,9 @@ import emoji
 #path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
 #stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
 #lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
-path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
-stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
-lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
+#path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
+#stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
+#lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
 tz=datetime.timezone(datetime.timedelta(hours=-5))
@@ -146,6 +146,9 @@ class AutomatedStuff(commands.Cog):
             await message.channel.send('Happy Birthday! 🎈🎉')
         if message.author.id is not stephan.id:
             msg=message.content.lower()
+            msg_strip=message.content.lower().replace(" ", "")
+            msg_strip=msg_strip.replace(".", "")
+            print(f"message: {msg} \n message stripped: {msg_strip}")
             if "soufflé" in msg and message.author.id is aj.id:
                 await message.delete()
                 await message.channel.send(f"I\'m getting real tired of filtering your variations for my name, {aj.mention}")
@@ -155,6 +158,9 @@ class AutomatedStuff(commands.Cog):
                 if word in msg:
                     await message.delete()
                     await message.channel.send(f"It's stephan to you {message.author.mention}!", delete_after=10)
+                if word in msg_strip:
+                    await message.delete()
+                    await message.channel.send(f"It's still stephan to you {message.author.mention}! maybe also stop trying to avoid my filter...", delete_after=10)
 
         # below is for adding reactions to messages in 'events'
         yes="⬆️"
@@ -164,10 +170,16 @@ class AutomatedStuff(commands.Cog):
             await message.add_reaction(yes)
             await message.add_reaction(no)
             await message.add_reaction(maybe)
+
         # below is removing messages that contain emojis only, to prevent spam
         custom_emojis=re.findall(r'<:\w*:\d*>', message.content)  # find custom emojis
         emoji_names=re.findall(r':\w*:', str(custom_emojis))  # find discord emoji name in the list of custom emoji
 
+        # below applies to animated emojis for above
+        custom_emojis=re.findall(r'<a:\w*:\d*>', message.content)  # find custom emojis
+        emoji_names=re.findall(r'a:\w*:', str(custom_emojis))  # find discord emoji name in the list of custom emoji
+
+        # below is for regular emojis
         text=emoji.demojize(message.content)
         text=re.findall(r'(:[^:]*:)', text)
 
@@ -179,12 +191,15 @@ class AutomatedStuff(commands.Cog):
         for word in emoji_names:
             clean_string=clean_string.replace(word, '')
 
-        # print(list_emoji)
-        # print(custom_emojis)
-        # print(message.author.roles)
+        #print(f"message content: {message.content}")
+        #print(f"list emojis: {list_emoji}")
+        #print(f"custom emojis: {custom_emojis}")
+        #print(message.author.roles)
         #print(f"length of message content: {len(clean_string)}")
+        #print(f"clean string message content: {clean_string}")
 
-        if (len(clean_string)<21 and len(custom_emojis)>0) or (len(list_emoji)>0 and len(clean_string)<1):
+
+        if (len(clean_string)<=21 and len(custom_emojis)>0) or (len(list_emoji)>0 and len(clean_string)<1):
             role1=discord.utils.get(message.guild.roles, name="Executive Producers")
             role2=discord.utils.get(message.guild.roles, name="Assistant Producers")
             if role1 in message.author.roles or role2 in message.author.roles:
@@ -274,7 +289,7 @@ class AutomatedStuff(commands.Cog):
         role=discord.utils.get(gid.roles, name="Recruit")
         if reaction.message_id==role_message:
             if role in userid.roles:
-                await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet")
+                print(f"role {role} removed due to {userid.display_name} being a recruit")
                 return
             if eid==900172591141097602:
                 await channel.send("How dare you remove Stephan", tts=True, delete_after=60)
