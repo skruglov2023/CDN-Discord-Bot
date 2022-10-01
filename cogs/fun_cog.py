@@ -36,6 +36,11 @@ class Fun(commands.Cog):
         # The format_dt function formats the date time into a human readable representation in the official bot
         await interaction.send(f'{member} joined {discord.utils.format_dt(member.joined_at)}', ephemeral=True)
 
+    @commands.hybrid_command()
+    async def cope(self, ctx: commands.Context):
+        """Responds with Kern's favorite gif"""
+        await ctx.send("https://tenor.com/view/cope-cry-about-it-seethe-cope-harder-cope-cope-gif-22973511")
+
 
 async def setup(bot):
     await bot.add_cog(Fun(bot))
