@@ -11,14 +11,14 @@ import emoji
 #path="C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\roles.txt"
 #stephanName='C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\stephan_and_nothing_else'
 #lastId = 'C:\\Users\\stepan\\PycharmProjects\\CDN-Discord-Bot\\variables\\last_audit_log_deletion'
-#path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
-#stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
-#lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
+path='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/roles.txt'
+stephanName='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/stephan_and_nothing_else'
+lastId='/home/pi/Desktop/scripts/CDN-Discord-Bot/variables/last_audit_log_deletion'
 
 global lastDeleteId
-tz=datetime.timezone(datetime.timedelta(hours=-5))
+tz=datetime.timezone(datetime.timedelta(hours=-6))
 
-lock_time=datetime.time(22, 0, tzinfo=tz)
+lock_time=datetime.time(23, 0, tzinfo=tz)
 unlock_time=datetime.time(6, 0, tzinfo=tz)
 
 
@@ -148,7 +148,7 @@ class AutomatedStuff(commands.Cog):
             msg=message.content.lower()
             msg_strip=message.content.lower().replace(" ", "")
             msg_strip=msg_strip.replace(".", "")
-            print(f"message: {msg} \n message stripped: {msg_strip}")
+#            print(f"message: {msg} \n message stripped: {msg_strip}")
             if "soufflé" in msg and message.author.id is aj.id:
                 await message.delete()
                 await message.channel.send(f"I\'m getting real tired of filtering your variations for my name, {aj.mention}")
@@ -176,8 +176,8 @@ class AutomatedStuff(commands.Cog):
         emoji_names=re.findall(r':\w*:', str(custom_emojis))  # find discord emoji name in the list of custom emoji
 
         # below applies to animated emojis for above
-        custom_emojis=re.findall(r'<a:\w*:\d*>', message.content)  # find custom emojis
-        emoji_names=re.findall(r'a:\w*:', str(custom_emojis))  # find discord emoji name in the list of custom emoji
+        a_custom_emojis=re.findall(r'<a:\w*:\d*>', message.content)  # find custom emojis
+        a_emoji_names=re.findall(r'a:\w*:', str(a_custom_emojis))  # find discord emoji name in the list of custom emoji
 
         # below is for regular emojis
         text=emoji.demojize(message.content)
@@ -190,10 +190,12 @@ class AutomatedStuff(commands.Cog):
             clean_string=clean_string.replace(word, '')
         for word in emoji_names:
             clean_string=clean_string.replace(word, '')
+        for word in a_emoji_names:
+            clean_string=clean_string.replace(word, '')
 
         #print(f"message content: {message.content}")
         #print(f"list emojis: {list_emoji}")
-        #print(f"custom emojis: {custom_emojis}")
+        #print(f"custom emojis: {a_custom_emojis}")
         #print(message.author.roles)
         #print(f"length of message content: {len(clean_string)}")
         #print(f"clean string message content: {clean_string}")
@@ -225,6 +227,7 @@ class AutomatedStuff(commands.Cog):
         message_id=await channel.fetch_message(reaction.message_id)
         emoji=self.bot.get_emoji(eid)
         userid=gid.get_member(reaction.user_id)
+        freshie=discord.utils.get(gid.roles, name="Freshman")
         recruit=discord.utils.get(gid.roles, name="Recruit")
         # print(f"{eid}, {ename}")
         # print(f"reaction channel: {channel}, bot testing channel: {bot_testing}")
@@ -236,6 +239,9 @@ class AutomatedStuff(commands.Cog):
             if recruit in userid.roles:
                 await channel.send(f"{userid.display_name}, you are a recruit and can't request roles yet",
                                    delete_after=60)
+                await message_id.remove_reaction(emoji, userid)
+                return
+            if freshie in userid.roles and (ename == "🧑" or eid == 883773966290944042 or eid == 926416491761528884):
                 await message_id.remove_reaction(emoji, userid)
                 return
             if eid==900172591141097602:
@@ -284,12 +290,17 @@ class AutomatedStuff(commands.Cog):
         role_message=926424422175367218
         eid=reaction.emoji.id
         ename=reaction.emoji.name
+        freshie_chan=discord.utils.get(gid.channels, name="freshie-chat")
         channel=self.bot.get_channel(reaction.channel_id)
         userid=gid.get_member(reaction.user_id)
+        freshie=discord.utils.get(gid.roles, name="Freshman")
         role=discord.utils.get(gid.roles, name="Recruit")
         if reaction.message_id==role_message:
             if role in userid.roles:
                 print(f"role {role} removed due to {userid.display_name} being a recruit")
+                return
+            if freshie in userid.roles and eid==883579348991492156:
+                await freshie_chan.send(f"you really thought you could escape the freshmen, {userid.mention}?")
                 return
             if eid==900172591141097602:
                 await channel.send("How dare you remove Stephan", tts=True, delete_after=60)

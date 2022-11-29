@@ -184,6 +184,7 @@ class Basic(commands.Cog):
     @commands.has_role("Fam")
     async def showroles(self, ctx):
         """Lists roles that can be given"""
+        print(av_roles)
         role_names=[discord.utils.get(ctx.guild.roles, id=int(av_role)).mention for av_role in av_roles]
         roles_string="\n".join(role_names)
         await ctx.send(f"Available Roles:\n{roles_string}", ephemeral=True)
