@@ -48,7 +48,8 @@ class Dropdown(discord.ui.Select):
             discord.SelectOption(label='admin', description='Reload Admin Cog'),
             discord.SelectOption(label='basic', description='Reload Basic Cog'),
             discord.SelectOption(label='fun', description='Reload Fun Cog'),
-            discord.SelectOption(label='automated', description='Reload Automated Cog')
+            discord.SelectOption(label='automated', description='Reload Automated Cog'),
+            discord.SelectOption(label='calendar', description='Reload Calendar Events Cog')
         ]
 
         # The placeholder is what will be shown when no option is chosen
@@ -90,6 +91,7 @@ class MyBot(commands.Bot):
             'cogs.basic_cog',
             'cogs.fun_cog',
             'cogs.automated_cog',
+            'cogs.calendar_cog'
         ]
 
     async def setup_hook(self):
