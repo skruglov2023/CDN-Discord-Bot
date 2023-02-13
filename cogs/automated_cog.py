@@ -96,6 +96,8 @@ class AutomatedStuff(commands.Cog):
             return
         if message.embeds > []:
             return
+        if message.guild is None:
+            return
         with open(lastId, 'r') as last_id:
             lastDeleteId = last_id.read()
         author = message.author.display_name
@@ -217,7 +219,7 @@ class AutomatedStuff(commands.Cog):
                 return
             await message.channel.send("Please don\'t respond here, I can\'t do anything with the message",
                                        delete_after = 10)
-            await stephan.send(message.content, delete_after = 43200)
+            await stephan.send(f"Message by {message.author}:\n{message.content}", delete_after = 86400)
 
     @commands.Cog.listener()
     @commands.guild_only()
