@@ -3,6 +3,7 @@ import asyncio
 import discord
 from discord.ext import commands
 from discord import app_commands
+from datetime import datetime
 
 import logging
 #logging.basicConfig(level=logging.DEBUG)
@@ -38,6 +39,8 @@ with open(TokenPath, 'r') as toke:
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
+
+global start_time
 
 
 class Dropdown(discord.ui.Select):
@@ -119,8 +122,12 @@ async def on_ready():
     #members = '\n - '.join([user.display_name for user in guild.members])
     #print(f'Guild Members:\n - {members}')
     await channel.send(f'{bot1.mention} is online')
-    #for deleting dm messages
-#    msgs=[918503766670585906]
+    global start_time
+    start_time = datetime.now()
+    # for deleting dm messages
+
+
+#    msgs=[]
 #    for msg in msgs:
 #        await bot.http.delete_message(881403952875339817, msg)
 #        print(msg)
@@ -166,6 +173,16 @@ async def reload_cog_error(ctx, error):
         await ctx.send(error)
 
 
+def days_hours_minutes(td):
+    return f"{td.days} days, {td.seconds // 3600} hours, {(td.seconds // 60) % 60} minutes, {td.seconds % 60} seconds"
+
+
+@bot.hybrid_command(name = "uptime", pass_context = False, hidden = True)
+async def uptime(ctx):
+    """Returns the uptime of the bot"""
+    await ctx.send(f"Uptime: {days_hours_minutes(datetime.now() - start_time)}", ephemeral = True)
+
+
 # This context menu command only works on members
 @bot.tree.context_menu(name='Show Join Date')
 async def show_join_date(interaction: discord.Interaction, member: discord.Member):
@@ -173,7 +190,7 @@ async def show_join_date(interaction: discord.Interaction, member: discord.Membe
     await interaction.response.send_message(f'{member} joined at {discord.utils.format_dt(member.joined_at)}', ephemeral=True)
 
 
-@bot.tree.context_menu(name="Let dictators/Franklin know")
+@bot.tree.context_menu(name = "Let dictators know")
 async def report_message(interaction: discord.Interaction, message: discord.Message):
     # We're sending this response message with ephemeral=True, so only the command executor can see it
     await interaction.response.send_message(
