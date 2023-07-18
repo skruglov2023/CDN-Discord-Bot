@@ -111,12 +111,11 @@ class Basic(commands.Cog):
         if user is None:
             user = ctx.author
         print(user)
-        date_format = "%a, %d %b %Y %I:%M %p"
         embed = discord.Embed(color = 0xdfa3ff, description = user.mention)
         embed.set_author(name = str(user), icon_url = user.display_avatar)
         embed.set_thumbnail(url = user.display_avatar)
-        embed.add_field(name = "Joined", value = user.joined_at.strftime(date_format))
-        embed.add_field(name = "Registered", value = user.created_at.strftime(date_format))
+        embed.add_field(name = "Joined", value = discord.utils.format_dt(user.joined_at))
+        embed.add_field(name = "Registered", value = discord.utils.format_dt(user.created_at))
         if len(user.roles) > 1:
             role_string = ' '.join([r.mention for r in user.roles][2:])
             embed.add_field(name = "Roles:", value = role_string, inline = False)
